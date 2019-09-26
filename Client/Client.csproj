@@ -47,7 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\AddAddends.cs" />
-    <Compile Include="Models\Sub.cs" />
+    <Compile Include="Models\DivDividendDivisor.cs" />
+    <Compile Include="Models\DivQuotientRemainder.cs" />
+    <Compile Include="Models\MultFactors.cs" />
+    <Compile Include="Models\MultProduct.cs" />
+    <Compile Include="Models\SubDiference.cs" />
+    <Compile Include="Models\SubOperators.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

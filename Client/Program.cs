@@ -12,30 +12,41 @@ namespace Client
 {
 	class Program
 	{
-		protected string urlServer = "http://localhost:50727/CalculatorS/Saluda";
+		protected static string urlServer = "http://localhost:50727/CalculatorS/";
 		protected static string action = "";
 
 		static void Main(string[] args)
 		{
 
 			bool operation = false;
-			string option = "-1";
+			string option = "Default";
 
 			do
 			{
+				
 				displayMenu();
 				option = Console.ReadLine();
 				operation = getOption(option);
-				List<double> data = getData();
 
-				if (data == null)
-				{
-					Console.WriteLine("OPERACION CANCELADA");
-				}
-				else
-				{
-					showResult(data);
-					Console.ReadKey();
+				if (!action.Equals("Default")) {
+					List<double> data;
+					if (action.Equals("Div")) {
+						data = getData(2);
+					}
+					else
+					{
+						data = getData();
+					}
+
+					if (data == null)
+					{
+						Console.WriteLine("OPERACION CANCELADA");
+					}
+					else
+					{
+						showResult(data);
+						Console.ReadKey();
+					}
 				}
 			} while (operation);
 
@@ -48,24 +59,84 @@ namespace Client
 
 		public static  void showResult(List<double> data) {
 			string responseFinal = null;
-
+			string responseServer = "";
 			switch (action)
 			{
 				case "Add":
 					AddAddends objAddAddends = new AddAddends(data);
-					string responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
-					AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
-					responseFinal = objAddSum.Sum;
+					responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
+
+					if (responseServer.Equals("404"))
+					{
+						Console.WriteLine("400 Petición Incorrecta");
+					}
+					else if(responseServer.Equals("500"))
+					{
+						Console.WriteLine("500 - Error interno");
+					}
+					else
+					{
+						AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
+						responseFinal = objAddSum.Sum;
+					}
 					break;
+
 				case "Sub":
-					//Sub objSub = new Sub(data);
-					//respuestaTemporal = makeRequest(JsonConvert.SerializeObject(objSub));
+					SubOperators objSubOperators = new SubOperators(data);
+					responseServer = makeRequest(JsonConvert.SerializeObject(objSubOperators));
+
+					if (responseServer.Equals("404"))
+					{
+						Console.WriteLine("400 Petición Incorrecta");
+					}
+					else if (responseServer.Equals("500"))
+					{
+						Console.WriteLine("500 - Error interno");
+					}
+					else
+					{
+						SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
+						responseFinal = objSubDiference.Diference;
+					}
+					break;
+				case "Mult":
+					MultFactors objMulFactors = new MultFactors(data);
+					responseServer = makeRequest(JsonConvert.SerializeObject(objMulFactors));
+
+					if (responseServer.Equals("404"))
+					{
+						Console.WriteLine("400 Petición Incorrecta");
+					}
+					else if (responseServer.Equals("500"))
+					{
+						Console.WriteLine("500 - Error interno");
+					}
+					else
+					{
+						MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
+						responseFinal = objMultProduct.Product;
+					}
+					break;
+				case "Div":
+					DivDividendDivisor objDivDividendDivisor = new DivDividendDivisor(Convert.ToString(data[0]), Convert.ToString(data[1]));
+					responseServer = makeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
+
+					if (responseServer.Equals("404"))
+					{
+						Console.WriteLine("400 Petición Incorrecta");
+					}
+					else if (responseServer.Equals("500"))
+					{
+						Console.WriteLine("500 - Error interno");
+					}
+					else
+					{
+						var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
+						responseFinal = "Cociente: " + objFinalDiv.Quotient + " Resto: " + objFinalDiv.Remainder;
+					}
 					break;
 			}
 
-			switch (action) {
-
-			}
 			Console.WriteLine(responseFinal);
 			//Console.WriteLine("---------PROGRAMA TERMINADO-------");
 			//Console.ReadKey();
@@ -79,6 +150,8 @@ namespace Client
 			Console.WriteLine("	0. Salir");
 			Console.WriteLine("	1. Suma");
 			Console.WriteLine("	2. Resta");
+			Console.WriteLine("	3. Multiplicacion");
+			Console.WriteLine("	4. Division");
 			Console.Write("Respuesta: ");
 		}//displayMenu
 
@@ -90,6 +163,7 @@ namespace Client
 			switch (chosenOption)
 			{
 				case "0":
+				case "SALIR":
 					Console.WriteLine("---------PROGRAMA TERMINADO-------");
 					Environment.Exit(-1);
 					response = false;
@@ -106,8 +180,21 @@ namespace Client
 					action = "Sub";
 					//response = false;
 					break;
+				case "3":
+				case "MULTIPLICACION":
+					Console.WriteLine("MULTIPLICANDO");
+					action = "Mult";
+					//response = false;
+					break;
+				case "4":
+				case "DIVISION":
+					Console.WriteLine("DIVIENDO");
+					action = "Div";
+					//response = false;
+					break;
 				default:
 					Console.WriteLine("Valor Invalido");
+					action = "Default";
 					response = true;
 					break;
 			}
@@ -116,7 +203,7 @@ namespace Client
 
 		}//getOption
 
-		public static List<double> getData()
+		public static List<double> getData( int reply = 0)
 		{
 			List<double> data = new List<double>();
 			Console.WriteLine("	 * Operando *	");
@@ -124,12 +211,13 @@ namespace Client
 			bool stop = true;
 			string operatorString;
 			int operatorInt;
+			int counter = 1;
 
 			do
 			{
 				operatorString = Console.ReadLine();
 
-				if (operatorString == String.Empty)
+				if (operatorString == String.Empty )
 				{
 					stop = false;
 				}
@@ -140,9 +228,13 @@ namespace Client
 				else if (Int32.TryParse(operatorString, out operatorInt))
 				{
 					data.Add(operatorInt);
+					if(counter == reply) {
+						stop = false;
+					}
 				}else {
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 				}
+				counter++;
 			} while (stop);
 
 			return data;
@@ -152,7 +244,7 @@ namespace Client
 
 		public static string makeRequest(string objString) {
 		var resultJSON = "";
-			var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:50727/CalculatorS/" + action);
+			var httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action);
 			httpWebRequest.ContentType = "application/json";
 			httpWebRequest.Method = "POST";
 
@@ -163,13 +255,33 @@ namespace Client
 				streamWriter.Write(objString);
 				streamWriter.Close();
 			}
-
-			var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-				
-			using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+			try
 			{
-				resultJSON = streamReader.ReadToEnd();
+				var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+				using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+				{
+					resultJSON = streamReader.ReadToEnd();
+				}
 			}
+			catch (System.Net.WebException ex)
+			{
+				var httpResponse = (HttpWebResponse)ex.Response;
+
+				switch (httpResponse.StatusCode)
+				{
+					case HttpStatusCode.NotFound: // 404
+						resultJSON = "404";
+						break;
+
+					case HttpStatusCode.InternalServerError: // 500
+						resultJSON = "404";
+						break;
+
+					default:
+						throw;
+				}
+			}
+
 			return resultJSON;
 
 		}//MakeRequest

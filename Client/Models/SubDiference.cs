@@ -5,13 +5,13 @@ using System.Web;
 
 namespace Client.Models
 {
-	public class Sub
+	public class SubDiference
 	{
-		public List<double> Operators { get; set; }
+		public string Diference { get; set; }
 
-		public Sub(List<double> Ope)
+		public SubDiference(string dif)
 		{
-			Operators = Ope;
+			Diference = dif;
 		}
 	}
 }
