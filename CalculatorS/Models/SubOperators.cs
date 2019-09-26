@@ -5,15 +5,15 @@ using System.Web;
 
 namespace CalculatorS.Models
 {
-	public class Sub
+	public class SubOperators
 	{
 		public List<double> Operators { get; set; }
 
-		public Sub (List<double> data){
+		public SubOperators (List<double> data){
 			Operators = data;
 		}
 
-		public Sub() {
+		public SubOperators() {
 		}
 
 		public double Subtract(){

@@ -243,10 +243,11 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Add.cs" />
+    <Compile Include="Models\AddSum.cs" />
+    <Compile Include="Models\AddAddends.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Saluda.cs" />
-    <Compile Include="Models\Sub.cs" />
+    <Compile Include="Models\SubDiference.cs" />
+    <Compile Include="Models\SubOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />

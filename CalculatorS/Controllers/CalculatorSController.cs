@@ -10,21 +10,29 @@ namespace CalculatorS.Controllers
 {
     public class CalculatorSController : Controller
     {
-        //// GET: CalculatorS
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
-
 		[HttpPost]
-		public double Add (Add numbersForAdd)
+		public string Add(AddAddends numbersForAdd)
 		{
-			var result = numbersForAdd.Sum();
-			return result;
-		}
+			double result = 0;
+			AddSum objectFinal = new AddSum();
+
+			if (numbersForAdd.Addends == null || numbersForAdd == null ) {
+				objectFinal.Sum = null;
+			} else {
+				result = 0;
+				foreach (double num in numbersForAdd.Addends)
+				{
+					result += num;
+				}
+				objectFinal.Sum = Convert.ToString(result);
+			}
+
+			return JsonConvert.SerializeObject(objectFinal);
+			
+		}//Add
 
 		[HttpPost]
-		public double Sub (Sub numbersForSubtract)
+		public double Sub (SubOperators numbersForSubtract)
 		{
 			var result = numbersForSubtract.Subtract();
 			return result;

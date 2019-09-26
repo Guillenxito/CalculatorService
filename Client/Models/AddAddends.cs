@@ -5,15 +5,15 @@ using System.Web;
 
 namespace Client.Models
 {
-	public class Add
+	public class AddAddends
 	{
 		public List<double> Addends {  get; set; }
 
-		public Add (List<double> data) {
+		public AddAddends (List<double> data) {
 			Addends = data;
 		}
 
-		public Add() {
+		public AddAddends() {
 		}
 		}//Sum
 

@@ -26,28 +26,50 @@ namespace Client
 				displayMenu();
 				option = Console.ReadLine();
 				operation = getOption(option);
+				List<double> data = getData();
+
+				if (data == null)
+				{
+					Console.WriteLine("OPERACION CANCELADA");
+				}
+				else
+				{
+					showResult(data);
+					Console.ReadKey();
+				}
 			} while (operation);
 
-			Console.WriteLine("OPERACION ACCEPTADA");
+			Console.ReadKey();
 
-			var data = getData();
 
-			string respuestaTemporal = "Vacia";
 
-			switch(action) {
+
+		}//Main
+
+		public static  void showResult(List<double> data) {
+			string responseFinal = null;
+
+			switch (action)
+			{
 				case "Add":
-					Add objAdd = new Add(data);
-					respuestaTemporal = makeRequest(JsonConvert.SerializeObject(objAdd));
+					AddAddends objAddAddends = new AddAddends(data);
+					string responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
+					AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
+					responseFinal = objAddSum.Sum;
 					break;
 				case "Sub":
-					Sub objSub = new Sub(data);
-					respuestaTemporal = makeRequest(JsonConvert.SerializeObject(objSub));
+					//Sub objSub = new Sub(data);
+					//respuestaTemporal = makeRequest(JsonConvert.SerializeObject(objSub));
 					break;
 			}
-			Console.WriteLine(respuestaTemporal);
-			Console.WriteLine("---------PROGRAMA TERMINADO-------");
-			Console.ReadKey();
-		}//Main
+
+			switch (action) {
+
+			}
+			Console.WriteLine(responseFinal);
+			//Console.WriteLine("---------PROGRAMA TERMINADO-------");
+			//Console.ReadKey();
+		}
 
 		public static void displayMenu()
 		{
@@ -62,13 +84,13 @@ namespace Client
 
 		public static bool getOption(string chosenOption)
 		{
-			bool response;
+			bool response= true;
 			chosenOption = chosenOption.ToUpper();
 
 			switch (chosenOption)
 			{
 				case "0":
-					Console.WriteLine("Salir");
+					Console.WriteLine("---------PROGRAMA TERMINADO-------");
 					Environment.Exit(-1);
 					response = false;
 					break;
@@ -76,13 +98,13 @@ namespace Client
 				case "SUMA":
 					Console.WriteLine("Sumando");
 					action = "Add";
-					response = false;
+					//response = false;
 					break;
 				case "2":
 				case "RESTA":
 					Console.WriteLine("Restando");
 					action = "Sub";
-					response = false;
+					//response = false;
 					break;
 				default:
 					Console.WriteLine("Valor Invalido");
@@ -97,7 +119,8 @@ namespace Client
 		public static List<double> getData()
 		{
 			List<double> data = new List<double>();
-			Console.WriteLine("	* Operando *	");
+			Console.WriteLine("	 * Operando *	");
+			Console.WriteLine("	 * Para salir escriba \"SALIR\". *	");
 			bool stop = true;
 			string operatorString;
 			int operatorInt;
@@ -110,18 +133,25 @@ namespace Client
 				{
 					stop = false;
 				}
+				else if((operatorString.ToUpper()).Equals("SALIR")) {
+					stop = false;
+					data = null;
+				}
 				else if (Int32.TryParse(operatorString, out operatorInt))
 				{
 					data.Add(operatorInt);
+				}else {
+					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 				}
 			} while (stop);
 
 			return data;
 		}//getData
 
-		
-		public static string makeRequest(string objString) {
+		//Hacerle un try para controlar los errores posibles:
 
+		public static string makeRequest(string objString) {
+		var resultJSON = "";
 			var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:50727/CalculatorS/" + action);
 			httpWebRequest.ContentType = "application/json";
 			httpWebRequest.Method = "POST";
@@ -135,15 +165,13 @@ namespace Client
 			}
 
 			var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-			var resultJSON = "VACIO";
+				
 			using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
 			{
-				//HAY QUE CAMBIARLO
-				 resultJSON = streamReader.ReadToEnd();
-				//var resultString = JsonConvert.DeserializeObject(resultJSON);
-				//Console.WriteLine(resultString);
+				resultJSON = streamReader.ReadToEnd();
 			}
 			return resultJSON;
+
 		}//MakeRequest
 	}//program
 }

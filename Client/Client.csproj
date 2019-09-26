@@ -46,13 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Add.cs" />
+    <Compile Include="Models\AddAddends.cs" />
     <Compile Include="Models\Sub.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Models\AddSum.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
