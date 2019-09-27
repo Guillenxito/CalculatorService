@@ -247,9 +247,13 @@
     <Compile Include="Models\AddAddends.cs" />
     <Compile Include="Models\DivDividendDivisor.cs" />
     <Compile Include="Models\DivQuotientRemainder.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Journal.cs" />
     <Compile Include="Models\MultFactors.cs" />
     <Compile Include="Models\MultProduct.cs" />
+    <Compile Include="Models\Query.cs" />
+    <Compile Include="Models\QueryOperation.cs" />
     <Compile Include="Models\SubDiference.cs" />
     <Compile Include="Models\SubOperators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

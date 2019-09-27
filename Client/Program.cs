@@ -65,20 +65,14 @@ namespace Client
 				case "Add":
 					AddAddends objAddAddends = new AddAddends(data);
 					responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
-
-					if (responseServer.Equals("404"))
-					{
-						Console.WriteLine("400 Petición Incorrecta");
-					}
-					else if(responseServer.Equals("500"))
-					{
-						Console.WriteLine("500 - Error interno");
-					}
-					else
-					{
+					try {
 						AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
 						responseFinal = objAddSum.Sum;
+					} catch (Exception) {
+						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = objAddSum.ErrorMessage;
 					}
+
 					break;
 
 				case "Sub":
@@ -139,7 +133,7 @@ namespace Client
 
 			Console.WriteLine(responseFinal);
 			//Console.WriteLine("---------PROGRAMA TERMINADO-------");
-			//Console.ReadKey();
+			Console.ReadKey();
 		}
 
 		public static void displayMenu()
@@ -170,13 +164,13 @@ namespace Client
 					break;
 				case "1":
 				case "SUMA":
-					Console.WriteLine("Sumando");
+					Console.WriteLine("SUMANDO");
 					action = "Add";
 					//response = false;
 					break;
 				case "2":
 				case "RESTA":
-					Console.WriteLine("Restando");
+					Console.WriteLine("RESTANDO");
 					action = "Sub";
 					//response = false;
 					break;
@@ -211,42 +205,47 @@ namespace Client
 			bool stop = true;
 			string operatorString;
 			int operatorInt;
-			int counter = 1;
+			int counter = 0;
 
-			do
-			{
+			while (stop == true) {
+				//Console.WriteLine("COUNTER:"+ Convert.ToInt32(counter) + "  Reply:" + Convert.ToInt32(reply));
 				operatorString = Console.ReadLine();
 
-				if (operatorString == String.Empty )
+				if (operatorString == String.Empty)
 				{
 					stop = false;
 				}
-				else if((operatorString.ToUpper()).Equals("SALIR")) {
+				else if ((operatorString.ToUpper()).Equals("SALIR"))
+				{
 					stop = false;
 					data = null;
 				}
 				else if (Int32.TryParse(operatorString, out operatorInt))
 				{
 					data.Add(operatorInt);
-					if(counter == reply) {
-						stop = false;
-					}
-				}else {
+				}
+				else
+				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 				}
-				counter++;
-			} while (stop);
+				++counter;
+			}
 
 			return data;
 		}//getData
 
 		//Hacerle un try para controlar los errores posibles:
 
-		public static string makeRequest(string objString) {
+		public static string makeRequest(string objString,string idTracking = null) {
 		var resultJSON = "";
 			var httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action);
 			httpWebRequest.ContentType = "application/json";
 			httpWebRequest.Method = "POST";
+
+			//if(idTracking != null) {
+				httpWebRequest.Headers["X-Evi-Tracking-Id"] = "PacoDeMiArma";
+			//}
+			
 
 
 			using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
@@ -271,6 +270,7 @@ namespace Client
 				{
 					case HttpStatusCode.NotFound: // 404
 						resultJSON = "404";
+
 						break;
 
 					case HttpStatusCode.InternalServerError: // 500

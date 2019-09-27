@@ -10,25 +10,55 @@ namespace CalculatorS.Controllers
 {
     public class CalculatorSController : Controller
     {
+		protected string idTraking { get; set; }
+		protected Query listTraking;
+		protected bool trakingReady = false;
+
+		public void haveTraking() {
+			//var c = Request.Headers["X-Evi-Tracking-Id"];
+			if(!string.IsNullOrEmpty(Request.Headers["X-Evi-Tracking-Id"])) {
+				idTraking = Request.Headers["X-Evi-Tracking-Id"];
+				listTraking = new Query(id);
+				trakingReady = true;
+			}
+			else{
+				idTraking = null;
+				listTraking = null;
+				trakingReady = false;
+			}
+		}
+
 		[HttpPost]
 		public string Add(AddAddends numbersForAdd)
 		{
-			double result = 0;
-			AddSum objectFinal = new AddSum();
-
-			if (numbersForAdd.Addends == null || numbersForAdd == null ) {
-				objectFinal.Sum = null;
-			} else {
-				result = 0;
+			try {
+				haveTraking();
+				if (numbersForAdd.Addends == null || numbersForAdd == null)
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+				AddSum objectFinal = new AddSum();
+				double result = 0;
+				string calculation = "";
 				foreach (double num in numbersForAdd.Addends)
 				{
 					result += num;
+					calculation += num+"+";
+				}
+				if(trakingReady) {
+					calculation.Substring(0, -1);
+					QueryOperation qp = new QueryOperation("Sum",calculation);
+					listTraking.setOperation(qp);
 				}
 				objectFinal.Sum = Convert.ToString(result);
+				return JsonConvert.SerializeObject(objectFinal);
+			}catch(Exception ex) {
+				Error objectFinalError = new Error();
+				objectFinalError.Error500(ex.ToString());
+				return JsonConvert.SerializeObject(objectFinalError);
 			}
-
-			return JsonConvert.SerializeObject(objectFinal);
-			
 		}//Add
 
 		[HttpPost]

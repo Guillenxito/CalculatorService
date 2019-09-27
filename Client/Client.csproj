@@ -49,6 +49,7 @@
     <Compile Include="Models\AddAddends.cs" />
     <Compile Include="Models\DivDividendDivisor.cs" />
     <Compile Include="Models\DivQuotientRemainder.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\MultFactors.cs" />
     <Compile Include="Models\MultProduct.cs" />
     <Compile Include="Models\SubDiference.cs" />
