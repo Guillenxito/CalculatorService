@@ -1,5 +1,0 @@
-** Operations History **
-{"Operation":"Sum","Calculation":"1800+200 = 2000","Date":"2019-09-30T09:20:22.5817912Z"}
-{"Operation":"Sub","Calculation":"2000-920 = 1080","Date":"2019-09-30T09:20:35.4290966Z"}
-{"Operation":"Mult","Calculation":"5*5*2 = 50","Date":"2019-09-30T09:40:21.3620775Z"}
-{"Operation":"Div","Calculation":"5 / 3 = Quotient(1)    Remainder(2)","Date":"2019-09-30T09:40:39.2677018Z"}

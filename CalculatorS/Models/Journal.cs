@@ -20,22 +20,45 @@ namespace CalculatorS.Models
 			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
 			if (!File.Exists(mainPath))
 			{
-				using (StreamWriter mylogs = File.AppendText(mainPath + Id)) 
+				using (StreamWriter mylogs = File.AppendText(mainPath)) 
 				{
-					mylogs.WriteLine("** Operations History **");
+					mylogs.WriteLine("_** Operations History **_");
 
 					mylogs.Close();
 				}
 			}
-			using (StreamWriter file = new StreamWriter(mainPath, true))
+			using (StreamWriter filew = new StreamWriter(mainPath, true))
 			{
-				file.WriteLine(operation); 
+				filew.WriteLine("_"+operation+"_"); 
 
-				file.Close();
+				filew.Close();
 			}
 		}//saveJournal
-			
 
-		
+		public bool existJournal() {
+			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
+			if ( File.Exists(mainPath)) {
+				return true;
+			}
+			return false;
+		}
+
+		public string readJournal() {
+
+			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
+
+			string line = "";
+			string text = "";
+			using (StreamReader file = new StreamReader(mainPath))
+			{
+				while ((line = file.ReadLine()) != null)
+				{
+					text = text + line + "\b";
+				}
+
+			}
+			return text;
+		}
+				
 	}
 }

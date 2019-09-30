@@ -181,11 +181,11 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 				SQRTsquare objectFinal = new SQRTsquare();
-				double result = Math.Sqrt(Convert.ToDouble(numberForSQRT));
+				double result = Math.Sqrt(Convert.ToInt32(numberForSQRT.Number));
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = " √"+ numberForSQRT;
+					string calculation = " √"+ numberForSQRT.Number;
 					Query Operation = new Query("Sqrt", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
@@ -194,6 +194,60 @@ namespace CalculatorS.Controllers
 
 				objectFinal.Square = Convert.ToString(result);
 				return JsonConvert.SerializeObject(objectFinal);
+			}
+			catch (Exception ex)
+			{
+				Error objectFinalError = new Error();
+				objectFinalError.Error500(ex.ToString());
+				return JsonConvert.SerializeObject(objectFinalError);
+			}
+		}//SQRT
+
+		[HttpPost] //TASTE
+		public string existJounal(Journal idForJournal)
+		{
+			try
+			{
+				if (idForJournal.Id == null || idForJournal == null)
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
+
+				if (idForJournal.existJournal()) {
+					return idForJournal.Id;				
+				 }
+
+				return null;
+
+			}
+			catch (Exception ex)
+			{
+				Error objectFinalError = new Error();
+				objectFinalError.Error500(ex.ToString());
+				return JsonConvert.SerializeObject(objectFinalError);
+			}
+		}//SQRT
+
+		[HttpPost] //TASTE
+		public string Jounal(Journal idForJournal)
+		{
+			try
+			{
+				if (idForJournal.Id == null || idForJournal == null)
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
+				if (idForJournal.existJournal() )
+				{
+					return idForJournal.readJournal();
+				}
+				return null;
 			}
 			catch (Exception ex)
 			{

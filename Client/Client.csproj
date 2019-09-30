@@ -50,8 +50,11 @@
     <Compile Include="Models\DivDividendDivisor.cs" />
     <Compile Include="Models\DivQuotientRemainder.cs" />
     <Compile Include="Models\Error.cs" />
+    <Compile Include="Models\Journal.cs" />
     <Compile Include="Models\MultFactors.cs" />
     <Compile Include="Models\MultProduct.cs" />
+    <Compile Include="Models\SQRTnumber.cs" />
+    <Compile Include="Models\SQRTsquare.cs" />
     <Compile Include="Models\SubDiference.cs" />
     <Compile Include="Models\SubOperators.cs" />
     <Compile Include="Program.cs" />
