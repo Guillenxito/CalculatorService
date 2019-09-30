@@ -10,29 +10,10 @@ namespace CalculatorS.Controllers
 {
     public class CalculatorSController : Controller
     {
-		protected string idTraking { get; set; }
-		protected Query listTraking;
-		protected bool trakingReady = false;
-
-		public void haveTraking() {
-			//var c = Request.Headers["X-Evi-Tracking-Id"];
-			if(!string.IsNullOrEmpty(Request.Headers["X-Evi-Tracking-Id"])) {
-				idTraking = Request.Headers["X-Evi-Tracking-Id"];
-				listTraking = new Query(id);
-				trakingReady = true;
-			}
-			else{
-				idTraking = null;
-				listTraking = null;
-				trakingReady = false;
-			}
-		}
-
 		[HttpPost]
 		public string Add(AddAddends numbersForAdd)
 		{
 			try {
-				haveTraking();
 				if (numbersForAdd.Addends == null || numbersForAdd == null)
 				{
 					Error objectFinalError = new Error();
@@ -41,17 +22,20 @@ namespace CalculatorS.Controllers
 				}
 				AddSum objectFinal = new AddSum();
 				double result = 0;
-				string calculation = "";
 				foreach (double num in numbersForAdd.Addends)
 				{
 					result += num;
-					calculation += num+"+";
 				}
-				if(trakingReady) {
-					calculation.Substring(0, -1);
-					QueryOperation qp = new QueryOperation("Sum",calculation);
-					listTraking.setOperation(qp);
+
+				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				{
+					string calculation = string.Join("+", numbersForAdd.Addends);
+					Query Operation = new Query("Sum", calculation + " = " + result);
+					string jsonOperation = JsonConvert.SerializeObject(Operation);
+					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
+					journal.saveJournal(jsonOperation);
 				}
+
 				objectFinal.Sum = Convert.ToString(result);
 				return JsonConvert.SerializeObject(objectFinal);
 			}catch(Exception ex) {
@@ -64,15 +48,17 @@ namespace CalculatorS.Controllers
 		[HttpPost]
 		public string Sub (SubOperators numbersForSubtract)
 		{
-			double result = 0;
-			SubDiference objectFinal = new SubDiference();
+			try { 
+				double result = 0;
+				SubDiference objectFinal = new SubDiference();
 
-			if (numbersForSubtract.Operators == null || numbersForSubtract == null)
-			{
-				objectFinal.Diference = null;
-			}
-			else
-			{
+				if (numbersForSubtract.Operators == null || numbersForSubtract == null)
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
 				double[] arr = new double[numbersForSubtract.Operators.Count];
 				List<int> list = new List<int>();
 
@@ -90,11 +76,24 @@ namespace CalculatorS.Controllers
 				{
 					result = result - num;
 				}
+				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				{
+					string calculation = string.Join("-", numbersForSubtract.Operators);
+					Query Operation = new Query("Sub", calculation + " = " + result);
+					string jsonOperation = JsonConvert.SerializeObject(Operation);
+					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
+					journal.saveJournal(jsonOperation);
+				}
 				objectFinal.Diference = Convert.ToString(result);
+				return JsonConvert.SerializeObject(objectFinal);
 			}
-
-			return JsonConvert.SerializeObject(objectFinal);
-		}
+			catch (Exception ex) 
+			{
+				Error objectFinalError = new Error();
+				objectFinalError.Error500(ex.ToString());
+				return JsonConvert.SerializeObject(objectFinalError);
+			}
+		}//Sub
 
 		[HttpPost]
 		public string Mult(MultFactors numbersForMult)

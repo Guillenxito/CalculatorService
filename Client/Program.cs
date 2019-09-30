@@ -241,10 +241,7 @@ namespace Client
 			var httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action);
 			httpWebRequest.ContentType = "application/json";
 			httpWebRequest.Method = "POST";
-
-			//if(idTracking != null) {
-				httpWebRequest.Headers["X-Evi-Tracking-Id"] = "PacoDeMiArma";
-			//}
+			httpWebRequest.Headers["X-Evi-Tracking-Id"] = "PacoDeMiArma";
 			
 
 
