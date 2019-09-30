@@ -20,7 +20,7 @@ namespace CalculatorS.Models
 			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
 			if (!File.Exists(mainPath))
 			{
-				using (StreamWriter mylogs = File.AppendText("C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id)) 
+				using (StreamWriter mylogs = File.AppendText(mainPath + Id)) 
 				{
 					mylogs.WriteLine("** Operations History **");
 
