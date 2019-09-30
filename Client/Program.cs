@@ -22,7 +22,7 @@ namespace Client
 
 			//bool operation = false;
 			string mainOption = "Default";
-			
+			bool operation = true;
 			do {
 				displayMainMenu();
 				mainOption = Console.ReadLine();
@@ -40,42 +40,59 @@ namespace Client
 							Console.WriteLine("Generando nuevo historial o usar uno existente");
 							idHistorial = generarId();
 							mainOption = "Default";
+							operation = true;
 							break;
 						case "2":
 							Console.WriteLine("Quitando Historial");
 							idHistorial = "";
 							mainOption = "Default";
+							operation = true;
 							break;
 						case "3":
-							Console.Write("Escriba el ID del historial que quieres utilizar: ");
+							Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
 							action = "ExistJounal";
-							idHistorial = Console.ReadLine();
+							string idHistorialUtility = Console.ReadLine();
+							if (!idHistorialUtility.ToUpper().Equals("ACTUAL"))
+							{
+								idHistorial = idHistorialUtility;
+							}
 							Journal journal = new Journal(idHistorial);
 							string resultfinal = makeRequest(JsonConvert.SerializeObject(journal));
 							if(resultfinal == null) {
 								Console.WriteLine("El ID no existe. No se guardara el historial.");
 								idHistorial = "";
+								operation = false;
+							}else {
+								operation = true;
 							}
 							mainOption = "Default";
 							break;
 						case "4":
-							Console.Write("Escriba el ID del historial que quieres Consultar: ");
+							Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
 							action = "ExistJounal";
-							idHistorial = Console.ReadLine();
+							string idHistorialQuery = Console.ReadLine();
+							if(!idHistorialQuery.ToUpper().Equals("ACTUAL")) {
+								idHistorial = idHistorialQuery;
+							}
 							Journal eJournal = new Journal(idHistorial);
 							string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
-							if (eResultfinal != null)
+							if (eResultfinal != "")
 							{
 								action = "Jounal";
 								Journal journalTwo = new Journal(idHistorial);
 								string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
 								string[] resultFinalArr = resultfinalTwo.Split('_');
-								foreach(string element in resultFinalArr) {
+								Console.Clear();
+								foreach (string element in resultFinalArr) {
 									Console.WriteLine(element);
 								}
 							}else {
+								Console.Clear();
+								idHistorial = "";
+								operation = false;
 								Console.WriteLine("Historial no existente");
 							}
+							Console.WriteLine(Environment.NewLine + "Pulsa Enter para continuar.");
 							Console.ReadKey();
 							mainOption = "Default";
 							break;
@@ -86,10 +103,10 @@ namespace Client
 							break;
 					}
 
-					bool operation = false;
+					//bool operation = false;
+					
 					string option = "Default";
-					do
-					{
+					while(operation) {
 						displayMenu();
 						option = Console.ReadLine();
 						operation = getOption(option);
@@ -123,7 +140,44 @@ namespace Client
 								}
 							}
 						}
-					} while (operation);	
+					}
+
+					//do
+					//{
+					//	displayMenu();
+					//	option = Console.ReadLine();
+					//	operation = getOption(option);
+					//	if (operation)
+					//	{
+					//		if (!action.Equals("Default"))
+					//		{
+					//			List<double> data;
+					//			switch (action)
+					//			{
+					//				case "Div":
+					//					data = getDataPro(2);
+					//					break;
+					//				case "Sqrt":
+					//					data = getDataPro(1);
+					//					break;
+					//				default:
+					//					data = getData();
+					//					break;
+					//			}
+
+
+					//			if (data == null)
+					//			{
+					//				Console.WriteLine("OPERACION CANCELADA");
+					//			}
+					//			else
+					//			{
+					//				showResult(data);
+					//				Console.ReadKey();
+					//			}
+					//		}
+					//	}
+					//} while (operation);	
 				}
 			} while (mainOption != "0" );
 
