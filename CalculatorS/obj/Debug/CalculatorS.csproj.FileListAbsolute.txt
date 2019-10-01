@@ -87,4 +87,3 @@ C:\dev\CalculatorS\CalculatorS\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\dev\CalculatorS\CalculatorS\bin\System.Web.Http.Owin.xml
 C:\dev\CalculatorS\CalculatorS\obj\Debug\CalculatorS.dll
 C:\dev\CalculatorS\CalculatorS\obj\Debug\CalculatorS.pdb
-C:\dev\CalculatorS\CalculatorS\obj\Debug\CalculatorS.csprojResolveAssemblyReference.cache
