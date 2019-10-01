@@ -50,7 +50,7 @@ namespace Client
 							break;
 						case "3":
 							Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
-							action = "ExistJounal";
+							action = "ExistJournal";
 							string idHistorialUtility = Console.ReadLine();
 							if (!idHistorialUtility.ToUpper().Equals("ACTUAL"))
 							{
@@ -58,9 +58,10 @@ namespace Client
 							}
 							Journal journal = new Journal(idHistorial);
 							string resultfinal = makeRequest(JsonConvert.SerializeObject(journal));
-							if(resultfinal == null) {
+							if(resultfinal == "") {
 								Console.WriteLine("El ID no existe. No se guardara el historial.");
 								idHistorial = "";
+								Console.ReadKey();
 								operation = false;
 							}else {
 								operation = true;
@@ -69,7 +70,7 @@ namespace Client
 							break;
 						case "4":
 							Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
-							action = "ExistJounal";
+							action = "ExistJournal";
 							string idHistorialQuery = Console.ReadLine();
 							if(!idHistorialQuery.ToUpper().Equals("ACTUAL")) {
 								idHistorial = idHistorialQuery;
@@ -78,7 +79,7 @@ namespace Client
 							string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
 							if (eResultfinal != "")
 							{
-								action = "Jounal";
+								action = "Journal";
 								Journal journalTwo = new Journal(idHistorial);
 								string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
 								string[] resultFinalArr = resultfinalTwo.Split('_');
@@ -127,8 +128,6 @@ namespace Client
 										data = getData();
 										break;
 								}
-
-
 								if (data == null)
 								{
 									Console.WriteLine("OPERACION CANCELADA");
@@ -142,42 +141,6 @@ namespace Client
 						}
 					}
 
-					//do
-					//{
-					//	displayMenu();
-					//	option = Console.ReadLine();
-					//	operation = getOption(option);
-					//	if (operation)
-					//	{
-					//		if (!action.Equals("Default"))
-					//		{
-					//			List<double> data;
-					//			switch (action)
-					//			{
-					//				case "Div":
-					//					data = getDataPro(2);
-					//					break;
-					//				case "Sqrt":
-					//					data = getDataPro(1);
-					//					break;
-					//				default:
-					//					data = getData();
-					//					break;
-					//			}
-
-
-					//			if (data == null)
-					//			{
-					//				Console.WriteLine("OPERACION CANCELADA");
-					//			}
-					//			else
-					//			{
-					//				showResult(data);
-					//				Console.ReadKey();
-					//			}
-					//		}
-					//	}
-					//} while (operation);	
 				}
 			} while (mainOption != "0" );
 
@@ -210,7 +173,7 @@ namespace Client
 
 		
 
-		public static  void showResult(List<double> data) {
+		public static void showResult(List<double> data) {
 			string responseFinal = null;
 			string responseServer = "";
 			switch (action)
@@ -218,63 +181,68 @@ namespace Client
 				case "Add":
 					AddAddends objAddAddends = new AddAddends(data);
 					responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
-					try {
-						AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
+
+					AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
+
+					if (objAddSum.Sum == null){
+						Error ErrorAdd = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = ErrorAdd.ErrorMessage;
+					}else {
 						responseFinal = objAddSum.Sum;
-					} catch (Exception) {
-						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = objAddSum.ErrorMessage;
 					}
 					break;
 
 				case "Sub":
 					SubOperators objSubOperators = new SubOperators(data);
 					responseServer = makeRequest(JsonConvert.SerializeObject(objSubOperators));
-					try{
-						SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
+
+					SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
+
+					if(objSubDiference.Diference == null) {
+						Error ErrorSub = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = ErrorSub.ErrorMessage;
+					}else {
 						responseFinal = objSubDiference.Diference;
-					} catch (Exception) {
-						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = objAddSum.ErrorMessage;
 					}
 					break;
 
 				case "Mult":
 					MultFactors objMulFactors = new MultFactors(data);
 					responseServer = makeRequest(JsonConvert.SerializeObject(objMulFactors));
-					try{
-						MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
+
+					MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
+
+					if (objMultProduct.Product == null){
+						Error ErrorMult = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = ErrorMult.ErrorMessage;
+					} else {
 						responseFinal = objMultProduct.Product;
-					}catch (Exception){
-						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = objAddSum.ErrorMessage;
 					}
 					break;
 
 				case "Div":
 					DivDividendDivisor objDivDividendDivisor = new DivDividendDivisor(Convert.ToString(data[0]), Convert.ToString(data[1]));
 					responseServer = makeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
-					try{
-						var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
+
+					var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
+
+					if (objFinalDiv.Quotient == null && objFinalDiv.Remainder == null) {
+						Error ErrorDiv = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = ErrorDiv.ErrorMessage;
+					} else {
 						responseFinal = "Cociente: " + objFinalDiv.Quotient + " Resto: " + objFinalDiv.Remainder;
-					} catch (Exception) {
-						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = objAddSum.ErrorMessage;
 					}
 					break;
 				case "Sqrt":
 					SQRTnumber objSqrtNumber = new SQRTnumber(Convert.ToString(data[0]));
 					responseServer = makeRequest(JsonConvert.SerializeObject(objSqrtNumber));
 
-					try
-					{
-						var objFinalDiv = JsonConvert.DeserializeObject<SQRTsquare>(responseServer);
-						responseFinal = objFinalDiv.Square;
-					}
-					catch (Exception)
-					{
-						Error objAddSum = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = objAddSum.ErrorMessage;
+					var objFinalSqrt = JsonConvert.DeserializeObject<SQRTsquare>(responseServer);
+					if(objFinalSqrt.Square == null) {
+						Error ErrorSqrt = JsonConvert.DeserializeObject<Error>(responseServer);
+						responseFinal = ErrorSqrt.ErrorMessage;
+					}else {
+						responseFinal = objFinalSqrt.Square;
 					}
 					break;
 			}
@@ -398,20 +366,21 @@ namespace Client
 			Console.WriteLine("	 * Operando *	");
 			Console.WriteLine("	 * Para salir escriba \"SALIR\". *	");
 			string operatorString;
-			int operatorInt;
+			double operatorDouble;
 
 			for(int i = 0; i < reply;i++) {
 				Console.Write("-> ");
 				operatorString = Console.ReadLine();
 				if (operatorString == String.Empty) {
 					--i;
-				} else if ((operatorString.ToUpper()).Equals("SALIR")) {
+			    }else if ((operatorString.ToUpper()).Equals("SALIR")) {
 					i = 1 + reply;
 					data = null;
-				} else if ((Int32.TryParse(operatorString, out operatorInt))) {
-					data.Add(operatorInt);
+				} else if ((Double.TryParse(operatorString, out operatorDouble))) {
+					data.Add(operatorDouble);
 				} else {
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
+					--i;
 				}
 			}
 			return data;

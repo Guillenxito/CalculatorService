@@ -139,7 +139,6 @@ namespace CalculatorS.Controllers
 		public string Div(DivDividendDivisor numbersForDiv)
 		{
 			try { 
-				DivQuotientRemainder objectFinal = new DivQuotientRemainder();
 				if (numbersForDiv.Dividend == null && numbersForDiv.Divisor == null || numbersForDiv == null)
 				{
 					Error objectFinalError = new Error();
@@ -147,10 +146,18 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
+				if(Convert.ToInt32(numbersForDiv.Dividend) == 0){
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					objectFinalError.ErrorMessage = "Cannot be divided by 0";
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
 				double Quotient = Convert.ToInt32(numbersForDiv.Dividend) / Convert.ToInt32(numbersForDiv.Divisor);
 				double Remainder = Convert.ToDouble(numbersForDiv.Dividend) % Convert.ToDouble(numbersForDiv.Divisor);
-				objectFinal.Quotient = Convert.ToString(Quotient);
-				objectFinal.Remainder = Convert.ToString(Remainder);
+				DivQuotientRemainder objectFinal = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
+				//objectFinal.Quotient = Convert.ToString(Quotient);
+				//objectFinal.Remainder = Convert.ToString(Remainder);
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
@@ -169,7 +176,7 @@ namespace CalculatorS.Controllers
 			}
 		}//Div
 
-		[HttpPost] //TASTE
+		[HttpPost] //CLOSED
 		public string SQRT(SQRTnumber numberForSQRT)
 		{
 			try
@@ -181,7 +188,7 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 				SQRTsquare objectFinal = new SQRTsquare();
-				double result = Math.Sqrt(Convert.ToInt32(numberForSQRT.Number));
+				double result = Math.Sqrt(Convert.ToDouble(numberForSQRT.Number));
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
@@ -203,8 +210,8 @@ namespace CalculatorS.Controllers
 			}
 		}//SQRT
 
-		[HttpPost] //TASTE
-		public string existJounal(Journal idForJournal)
+		[HttpPost] //CLOSED
+		public string existJournal(Journal idForJournal)
 		{
 			try
 			{
@@ -231,8 +238,8 @@ namespace CalculatorS.Controllers
 			}
 		}//SQRT
 
-		[HttpPost] //TASTE
-		public string Jounal(Journal idForJournal)
+		[HttpPost] //CLOSED
+		public string Journal(Journal idForJournal)
 		{
 			try
 			{
