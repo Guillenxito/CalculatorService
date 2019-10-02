@@ -26,12 +26,17 @@ namespace CalculatorS.Controllers
 				double numD;
 				foreach (string num in numbersForAdd.Addends)
 				{
-					if (!double.TryParse(num, out numD))
-					{
+					if (!double.TryParse(num, out numD)){
 						Error objectFinalError = new Error();
 						objectFinalError.Error400();
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
+					//if (num.StartsWith(".")) {
+					//	Error objectFinalError = new Error();
+					//	objectFinalError.Error400();
+					//	objectFinalError.ErrorMessage = "Valores introducidos son invalidos.";
+					//	return JsonConvert.SerializeObject(objectFinalError);
+					//}
 					result += Convert.ToDouble(num);
 				}
 
@@ -68,7 +73,7 @@ namespace CalculatorS.Controllers
 				}
 
 				double[] arr = new double[numbersForSubtract.Operators.Count];
-				List<int> list = new List<int>();
+				List<double> list = new List<double>();
 
 				double numD;
 				foreach (string num in numbersForSubtract.Operators)
@@ -83,7 +88,7 @@ namespace CalculatorS.Controllers
 				}
 
 				for (int i = 0; i < numbersForSubtract.Operators.Count; i++) {
-					list.Add(Convert.ToInt32(numbersForSubtract.Operators[i]));
+					list.Add(Convert.ToDouble(numbersForSubtract.Operators[i]));
 				}
 
 				list.Sort();
@@ -179,14 +184,14 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if (Convert.ToInt32(numbersForDiv.Dividend) == 0){
+				if (Convert.ToDouble(numbersForDiv.Dividend) == 0){
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					objectFinalError.ErrorMessage = "Cannot be divided by 0";
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				double Quotient = Convert.ToInt32(numbersForDiv.Dividend) / Convert.ToInt32(numbersForDiv.Divisor);
+				double Quotient = Convert.ToDouble(numbersForDiv.Dividend) / Convert.ToDouble(numbersForDiv.Divisor);
 				double Remainder = Convert.ToDouble(numbersForDiv.Dividend) % Convert.ToDouble(numbersForDiv.Divisor);
 				DivQuotientRemainder objectFinal = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
 				//objectFinal.Quotient = Convert.ToString(Quotient);

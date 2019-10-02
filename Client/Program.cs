@@ -154,7 +154,7 @@ namespace Client
 				}
 			} while (mainOption != "0" );
 
-			Console.WriteLine("---------PROGRAMA FINALIZADO-------------");
+			Console.WriteLine(Environment.NewLine + "---------PROGRAMA FINALIZADO-------------");
 			Console.ReadKey();
 
 		}//Main
@@ -180,8 +180,6 @@ namespace Client
 			Console.WriteLine("4. Consultar Historial." + Environment.NewLine);
 			Console.Write("Respuesta: ");
 		}
-
-		
 
 		public static void showResult(List<string> data) {
 			string responseFinal = null;
@@ -265,7 +263,7 @@ namespace Client
 		public static void displayMenu()
 		{
 			Console.Clear();
-			Console.Write("** CALCULATOR SERVICE **");
+			Console.WriteLine("** CALCULATOR SERVICE **");
 			if (idHistorial != "")
 			{
 				Console.WriteLine(" Numero de Historial: " + idHistorial);
@@ -323,7 +321,8 @@ namespace Client
 					//response = false;
 					break;
 				default:
-					Console.WriteLine("Valor Invalido");
+					Console.WriteLine("Valor \'{0}\' es Invalido.", chosenOption);
+					Console.ReadKey();
 					action = "Default";
 					response = true;
 					break;
@@ -333,7 +332,7 @@ namespace Client
 
 		}//getOption
 
-		public static List<string> getData( int reply = 0)
+		public static List<string> getData()
 		{
 			List<string> data = new List<string>();
 			Console.Clear();
@@ -341,7 +340,6 @@ namespace Client
 			bool stop = true;
 			string operatorString;
 			double operatorInt;
-			int counter = 0;
 
 			displayInstructions();
 
@@ -365,6 +363,12 @@ namespace Client
 					stop = false;
 					data = null;
 				}
+				else if (operatorString.StartsWith("."))
+				{
+					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
+					Console.ReadKey();
+					displayInstructions();
+				}
 				else if (double.TryParse(operatorString, out operatorInt))
 				{
 					data.Add(operatorString);
@@ -376,10 +380,6 @@ namespace Client
 					Console.ReadKey();
 					displayInstructions();
 				}
-
-				
-				++counter;
-
 			}
 
 			return data;
@@ -427,32 +427,37 @@ namespace Client
 					displayInstructions();
 					--i;
 					Console.WriteLine(String.Join(getSymbolAction(), data));
-				}
-				else if ((operatorString.ToUpper()).Equals("SALIR")) {
+				} else if ((operatorString.ToUpper()).Equals("SALIR")) {
 					i = 1 + reply;
 					data = null;
-				} else if ((Double.TryParse(operatorString, out operatorDouble))) {
+				}else if (operatorString.StartsWith(".")){
+					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
+					Console.ReadKey();
+					--i;
+				}
+				else if ((Double.TryParse(operatorString, out operatorDouble))) {
 					displayInstructions();
 					data.Add(operatorString);
 				} else {
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
+					Console.ReadKey();
 					--i;
 				}
 			}//for
-			if(action.Equals("Sqrt")) {
-				Console.WriteLine(getSymbolAction() + data[0]);
+			if(data!= null){
+				if (action.Equals("Sqrt"))
+				{
+					Console.WriteLine(getSymbolAction() + data[0]);
+				}
+				else
+				{
+					Console.WriteLine(String.Join(getSymbolAction(), data));
+				}
 			}
-			else {
-				Console.WriteLine(String.Join(getSymbolAction(), data));
-			}
-			
+
 			//Console.ReadKey();
 			return data;
 		}//getData
-
-
-
-		//Hacerle un try para controlar los errores posibles:
 
 		public static string makeRequest(string objString) {
 		var resultJSON = "";
@@ -476,22 +481,7 @@ namespace Client
 			}
 			catch (System.Net.WebException ex)
 			{
-				var httpResponse = (HttpWebResponse)ex.Response;
-
-				switch (httpResponse.StatusCode)
-				{
-					case HttpStatusCode.NotFound: // 404
-						resultJSON = "404";
-
-						break;
-
-					case HttpStatusCode.InternalServerError: // 500
-						resultJSON = "404";
-						break;
-
-					default:
-						throw;
-				}
+				resultJSON = ex.ToString();
 			}
 
 			return resultJSON;
