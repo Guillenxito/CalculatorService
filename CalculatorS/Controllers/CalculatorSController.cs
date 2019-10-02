@@ -23,9 +23,16 @@ namespace CalculatorS.Controllers
 				}
 				AddSum objectFinal = new AddSum();
 				double result = 0;
-				foreach (double num in numbersForAdd.Addends)
+				double numD;
+				foreach (string num in numbersForAdd.Addends)
 				{
-					result += num;
+					if (!double.TryParse(num, out numD))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error400();
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
+					result += Convert.ToDouble(num);
 				}
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
@@ -63,7 +70,19 @@ namespace CalculatorS.Controllers
 				double[] arr = new double[numbersForSubtract.Operators.Count];
 				List<int> list = new List<int>();
 
-				for(int i = 0; i < numbersForSubtract.Operators.Count; i++) {
+				double numD;
+				foreach (string num in numbersForSubtract.Operators)
+				{
+					if (!double.TryParse(num, out numD))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error400();
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
+					result += Convert.ToDouble(num);
+				}
+
+				for (int i = 0; i < numbersForSubtract.Operators.Count; i++) {
 					list.Add(Convert.ToInt32(numbersForSubtract.Operators[i]));
 				}
 
@@ -98,9 +117,9 @@ namespace CalculatorS.Controllers
 
 		[HttpPost] //CLOSED
 		public string Mult(MultFactors numbersForMult)
-		{
+		{ 
 			try {
-				double result = 0;
+				double result = 1;
 				MultProduct objectFinal = new MultProduct();
 
 				if (numbersForMult.Factors == null || numbersForMult == null)
@@ -109,11 +128,17 @@ namespace CalculatorS.Controllers
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
-			
-				result = 1;
-				foreach (double num in numbersForMult.Factors)
+	
+				double numD;
+				foreach (string num in numbersForMult.Factors)
 				{
-					result *= num;
+					if (!double.TryParse(num, out numD))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error400();
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
+					result *= Convert.ToDouble(num);
 				}
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
@@ -146,7 +171,15 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if(Convert.ToInt32(numbersForDiv.Dividend) == 0){
+				double numD;
+				if (!double.TryParse(numbersForDiv.Dividend, out numD) || !double.TryParse(numbersForDiv.Divisor, out numD))
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
+				if (Convert.ToInt32(numbersForDiv.Dividend) == 0){
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					objectFinalError.ErrorMessage = "Cannot be divided by 0";
@@ -187,6 +220,21 @@ namespace CalculatorS.Controllers
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
+				double numD;
+				if (!double.TryParse(numberForSQRT.Number, out numD))
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					return JsonConvert.SerializeObject(objectFinalError);
+				}else if (0 > Convert.ToDouble(numberForSQRT.Number))
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					//objectFinalError.ErrorMessage = "the SQRT of a negative number cannot be made";
+					objectFinalError.ErrorMessage = "No se puede hcaer una raiz cuadrada de un numero negativo";
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
 				SQRTsquare objectFinal = new SQRTsquare();
 				double result = Math.Sqrt(Convert.ToDouble(numberForSQRT.Number));
 

@@ -7,9 +7,9 @@ namespace CalculatorS.Models
 {
 	public class SubOperators
 	{
-		public List<double> Operators { get; set; }
+		public List<string> Operators { get; set; }
 
-		public SubOperators (List<double> data){
+		public SubOperators (List<string> data){
 			Operators = data;
 		}
 
@@ -19,8 +19,8 @@ namespace CalculatorS.Models
 		public double Subtract(){
 			double result = 0;
 
-			foreach (double element in Operators){
-				result += element;
+			foreach (string element in Operators){
+				result += Convert.ToDouble(element);
 			}
 			return result;
 		}// Subtract

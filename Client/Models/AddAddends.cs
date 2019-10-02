@@ -7,9 +7,9 @@ namespace Client.Models
 {
 	public class AddAddends
 	{
-		public List<double> Addends {  get; set; }
+		public List<string> Addends {  get; set; }
 
-		public AddAddends (List<double> data) {
+		public AddAddends (List<string> data) {
 			Addends = data;
 		}
 

@@ -1,0 +1,14 @@
+_** Operations History **_
+_{"Operation":"Sum","Calculation":"1 + 1 = 2","Date":"2019-10-02T08:15:50.0302144Z"}_
+_{"Operation":"Mult","Calculation":"1 * 1 = 1","Date":"2019-10-02T08:17:25.3454383Z"}_
+_{"Operation":"Mult","Calculation":"5 * 1 = 5","Date":"2019-10-02T08:17:40.5173752Z"}_
+_{"Operation":"Mult","Calculation":"5 * 5 = 25","Date":"2019-10-02T08:17:50.8717519Z"}_
+_{"Operation":"Mult","Calculation":"5 * 5 = 25","Date":"2019-10-02T08:18:04.1736068Z"}_
+_{"Operation":"Mult","Calculation":"8 * 5 = 40","Date":"2019-10-02T08:18:29.9761385Z"}_
+_{"Operation":"Sum","Calculation":"0 + 5 = 5","Date":"2019-10-02T09:09:50.2007701Z"}_
+_{"Operation":"Sum","Calculation":"0 + 5 = 5","Date":"2019-10-02T09:09:54.8160357Z"}_
+_{"Operation":"Mult","Calculation":"5 * 5 * 58 = 1450","Date":"2019-10-02T09:35:27.9008689Z"}_
+_{"Operation":"Mult","Calculation":"5 * 5 = 25","Date":"2019-10-02T09:35:32.5186313Z"}_
+_{"Operation":"Div","Calculation":"5 / 2 = Quotient(2) & Remainder(1)","Date":"2019-10-02T09:43:12.3374415Z"}_
+_{"Operation":"Div","Calculation":"5 / 2 = Quotient(2) & Remainder(1)","Date":"2019-10-02T09:43:37.7139096Z"}_
+_{"Operation":"Sqrt","Calculation":" √-1 = NaN","Date":"2019-10-02T09:49:44.2304295Z"}_

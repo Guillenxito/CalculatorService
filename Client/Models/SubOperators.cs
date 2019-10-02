@@ -7,9 +7,9 @@ namespace Client.Models
 {
 	public class SubOperators
 	{
-		public List<double> Operators { get; set; }
+		public List<string> Operators { get; set; }
 
-		public SubOperators(List<double> Ope)
+		public SubOperators(List<string> Ope)
 		{
 			Operators = Ope;
 		}

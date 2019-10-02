@@ -37,18 +37,17 @@ namespace Client
 							//Environment.Exit(-1);
 							break;
 						case "1":
-							Console.WriteLine("Generando nuevo historial o usar uno existente");
 							idHistorial = generarId();
 							mainOption = "Default";
 							operation = true;
 							break;
 						case "2":
-							Console.WriteLine("Quitando Historial");
 							idHistorial = "";
 							mainOption = "Default";
 							operation = true;
 							break;
 						case "3":
+							Console.Clear();
 							Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
 							action = "ExistJournal";
 							string idHistorialUtility = Console.ReadLine();
@@ -69,30 +68,41 @@ namespace Client
 							mainOption = "Default";
 							break;
 						case "4":
+							Console.Clear();
 							Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
 							action = "ExistJournal";
 							string idHistorialQuery = Console.ReadLine();
 							if(!idHistorialQuery.ToUpper().Equals("ACTUAL")) {
 								idHistorial = idHistorialQuery;
 							}
-							Journal eJournal = new Journal(idHistorial);
-							string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
-							if (eResultfinal != "")
+							if (!idHistorialQuery.Equals(""))
 							{
-								action = "Journal";
-								Journal journalTwo = new Journal(idHistorial);
-								string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
-								string[] resultFinalArr = resultfinalTwo.Split('_');
-								Console.Clear();
-								foreach (string element in resultFinalArr) {
-									Console.WriteLine(element);
+								Journal eJournal = new Journal(idHistorial);
+								string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
+								if (eResultfinal != "")
+								{
+									action = "Journal";
+									Journal journalTwo = new Journal(idHistorial);
+									string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
+									string[] resultFinalArr = resultfinalTwo.Split('_');
+									Console.Clear();
+									foreach (string element in resultFinalArr)
+									{
+										Console.WriteLine(element);
+									}
 								}
-							}else {
-								Console.Clear();
-								idHistorial = "";
+								else
+								{
+									Console.Clear();
+									idHistorial = "";
+									operation = false;
+									Console.WriteLine("Historial no existente");
+								}
+							} else {
 								operation = false;
-								Console.WriteLine("Historial no existente");
+								Console.WriteLine("Tienes que introducir un valor...");
 							}
+							
 							Console.WriteLine(Environment.NewLine + "Pulsa Enter para continuar.");
 							Console.ReadKey();
 							mainOption = "Default";
@@ -115,7 +125,7 @@ namespace Client
 						{
 							if (!action.Equals("Default"))
 							{
-								List<double> data;
+								List<string> data;
 								switch (action)
 								{
 									case "Div":
@@ -173,7 +183,7 @@ namespace Client
 
 		
 
-		public static void showResult(List<double> data) {
+		public static void showResult(List<string> data) {
 			string responseFinal = null;
 			string responseServer = "";
 			switch (action)
@@ -246,9 +256,9 @@ namespace Client
 					}
 					break;
 			}
-
+			Console.Write(Environment.NewLine + "Resultado: ");
 			Console.WriteLine(responseFinal);
-			//Console.WriteLine("---------PROGRAMA TERMINADO-------");
+			Console.Write(Environment.NewLine + "Pulse \'Enter\' para continuar.");
 			Console.ReadKey();
 		}
 
@@ -323,66 +333,120 @@ namespace Client
 
 		}//getOption
 
-		public static List<double> getData( int reply = 0)
+		public static List<string> getData( int reply = 0)
 		{
-			List<double> data = new List<double>();
-			Console.WriteLine("	 * Operando *	");
-			Console.WriteLine("	 * Para salir escriba \"SALIR\". *	");
+			List<string> data = new List<string>();
+			Console.Clear();
+			
 			bool stop = true;
 			string operatorString;
-			int operatorInt;
+			double operatorInt;
 			int counter = 0;
 
+			displayInstructions();
+
 			while (stop == true) {
-				//Console.WriteLine("COUNTER:"+ Convert.ToInt32(counter) + "  Reply:" + Convert.ToInt32(reply));
+				Console.Write("  ");
+
+				foreach(string ele in data) {
+					Console.Write(ele + getSymbolAction());
+				}
+
 				operatorString = Console.ReadLine();
 
 				if (operatorString == String.Empty)
 				{
 					stop = false;
+					displayInstructions();
+					Console.WriteLine(String.Join(getSymbolAction(),data));
 				}
 				else if ((operatorString.ToUpper()).Equals("SALIR"))
 				{
 					stop = false;
 					data = null;
 				}
-				else if (Int32.TryParse(operatorString, out operatorInt))
+				else if (double.TryParse(operatorString, out operatorInt))
 				{
-					data.Add(operatorInt);
+					data.Add(operatorString);
+					displayInstructions();
 				}
 				else
 				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
+					Console.ReadKey();
+					displayInstructions();
 				}
+
+				
 				++counter;
+
 			}
 
 			return data;
 		}//getData
 
-		public static List<double> getDataPro(int reply = 0)
+		public static void displayInstructions() {
+			Console.Clear();
+			Console.WriteLine("		--INSTRUCCIONES ({0})--", getAction());
+			Console.WriteLine(" * Introduce cada operando uno por uno pulsando \'ENTER\'.");
+			Console.WriteLine(" * Para realizar la operacion pulse \'ENTER\' sin escribir nada.");
+			Console.WriteLine(" * Para cancelar la operacion escriba \'SALIR\'. 	");
+			Console.WriteLine("		      ----" + Environment.NewLine);
+		}
+
+		public static List<string> getDataPro(int reply = 0)
 		{
-			List<double> data = new List<double>();
-			Console.WriteLine("	 * Operando *	");
-			Console.WriteLine("	 * Para salir escriba \"SALIR\". *	");
+			List<string> data = new List<string>();
 			string operatorString;
 			double operatorDouble;
+	
+			for (int i = 0; i < reply;i++) {
+				Console.Write("  "); 
+				displayInstructions();
+				foreach (string ele in data)
+				{
+					if (action.Equals("Sqrt"))
+					{
+						Console.Write(getSymbolAction() + ele);
+					}
+					else
+					{
+						Console.Write(ele + getSymbolAction() );
+					}
+					
+				}
 
-			for(int i = 0; i < reply;i++) {
-				Console.Write("-> ");
+				if (action.Equals("Sqrt"))
+				{
+					Console.Write(getSymbolAction());
+				}
+
 				operatorString = Console.ReadLine();
+
 				if (operatorString == String.Empty) {
+					displayInstructions();
 					--i;
-			    }else if ((operatorString.ToUpper()).Equals("SALIR")) {
+					Console.WriteLine(String.Join(getSymbolAction(), data));
+				}
+				else if ((operatorString.ToUpper()).Equals("SALIR")) {
 					i = 1 + reply;
 					data = null;
 				} else if ((Double.TryParse(operatorString, out operatorDouble))) {
-					data.Add(operatorDouble);
+					displayInstructions();
+					data.Add(operatorString);
 				} else {
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					--i;
 				}
+			}//for
+			if(action.Equals("Sqrt")) {
+				Console.WriteLine(getSymbolAction() + data[0]);
 			}
+			else {
+				Console.WriteLine(String.Join(getSymbolAction(), data));
+			}
+			
+			//Console.ReadKey();
 			return data;
 		}//getData
 
@@ -433,5 +497,59 @@ namespace Client
 			return resultJSON;
 
 		}//MakeRequest
+
+		public static string getAction() {
+			string actionFinal; 
+		switch(action) {
+				case "Add":
+					actionFinal = "SUMA";
+					break;
+				case "Sub":
+					actionFinal = "RESTA";
+					break;
+				case "Div":
+					actionFinal = "DIVIDIR";
+					break;
+				case "Sqrt":
+					actionFinal = "Raiz Cuadrada";
+					break;
+				case "Mult":
+					actionFinal = "MULTIPLICACION";
+					break;
+				default:
+					actionFinal = "";
+					break;
+			}
+
+			return actionFinal;
+		}
+
+		public static string getSymbolAction()
+		{
+			string actionFinal;
+			switch (action)
+			{
+				case "Add":
+					actionFinal = " + ";
+					break;
+				case "Sub":
+					actionFinal = " - ";
+					break;
+				case "Div":
+					actionFinal = " / ";
+					break;
+				case "Sqrt":
+					actionFinal = " √ ";
+					break;
+				case "Mult":
+					actionFinal = " * ";
+					break;
+				default:
+					actionFinal = " -_- ";
+					break;
+			}
+
+			return actionFinal;
+		}
 	}//program
 }

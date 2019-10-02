@@ -7,9 +7,9 @@ namespace Client.Models
 {
 	public class MultFactors
 	{
-		public List<double> Factors { get; set; }
+		public List<string> Factors { get; set; }
 
-		public MultFactors(List<double> data)
+		public MultFactors(List<string> data)
 		{
 			Factors = data;
 		}
