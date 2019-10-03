@@ -5,7 +5,6 @@ C:\dev\CalculatorS\Client\obj\Debug\Client.exe
 C:\dev\CalculatorS\Client\obj\Debug\Client.pdb
 C:\dev\CalculatorS\Client\bin\Debug\Newtonsoft.Json.dll
 C:\dev\CalculatorS\Client\bin\Debug\Newtonsoft.Json.xml
-C:\dev\CalculatorS\Client\bin\Debug\ApplicationInsights.config
 C:\dev\CalculatorS\Client\bin\Debug\roslyn\csc.exe
 C:\dev\CalculatorS\Client\bin\Debug\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 C:\dev\CalculatorS\Client\bin\Debug\roslyn\Microsoft.CodeAnalysis.CSharp.dll

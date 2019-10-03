@@ -1,4 +1,3 @@
-C:\dev\CalculatorS\CalculatorS\bin\ApplicationInsights.config
 C:\dev\CalculatorS\CalculatorS\bin\roslyn\csc.exe
 C:\dev\CalculatorS\CalculatorS\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 C:\dev\CalculatorS\CalculatorS\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
