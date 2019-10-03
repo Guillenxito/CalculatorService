@@ -17,7 +17,7 @@ namespace CalculatorS.Models
 
 		public void saveJournal(string operation)
 		{
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
+			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
 			if (!File.Exists(mainPath))
 			{
 				using (StreamWriter mylogs = File.AppendText(mainPath)) 
