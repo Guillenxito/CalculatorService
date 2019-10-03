@@ -8,10 +8,9 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using CalculatorS.Providers;
 using CalculatorS.Models;
 
-namespace CalculatorS
+/*namespace CalculatorS
 {
     public partial class Startup
     {
@@ -67,3 +66,4 @@ namespace CalculatorS
         }
     }
 }
+*/

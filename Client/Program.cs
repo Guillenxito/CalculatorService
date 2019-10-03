@@ -352,8 +352,12 @@ namespace Client
 				}
 
 				operatorString = Console.ReadLine();
-
-				if (operatorString == String.Empty)
+				if (operatorString == String.Empty && data.Count == 0) {
+					Console.WriteLine("Campo vacio.");
+					Console.ReadKey();
+					displayInstructions();
+				}
+				else if (operatorString == String.Empty)
 				{
 					stop = false;
 					displayInstructions();
@@ -425,6 +429,8 @@ namespace Client
 				operatorString = Console.ReadLine();
 
 				if (operatorString == String.Empty) {
+					Console.WriteLine("Campo vacio.");
+					Console.ReadKey();
 					displayInstructions();
 					--i;
 					Console.WriteLine(String.Join(getSymbolAction(), data));
