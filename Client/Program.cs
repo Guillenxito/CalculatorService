@@ -146,6 +146,7 @@ namespace Client
 								{
 									showResult(data);
 									Console.ReadKey();
+									//displayMainMenu();
 								}
 							}
 						}
@@ -254,10 +255,10 @@ namespace Client
 					}
 					break;
 			}
-			Console.Write(Environment.NewLine + "Resultado: ");
-			Console.WriteLine(responseFinal);
+			Console.Write(Environment.NewLine + "Resultado: " + responseFinal);
 			Console.Write(Environment.NewLine + "Pulse \'Enter\' para continuar.");
 			Console.ReadKey();
+
 		}
 
 		public static void displayMenu()
@@ -455,7 +456,6 @@ namespace Client
 				}
 			}
 
-			//Console.ReadKey();
 			return data;
 		}//getData
 
