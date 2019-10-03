@@ -1,0 +1,8 @@
+_** Operations History **_
+_{"Operation":"Sum","Calculation":"5.1 + 5 = 10.1","Date":"2019-10-03T11:27:21.0063857Z"}_
+_{"Operation":"Sub","Calculation":"5.1 - 5 = 0.1","Date":"2019-10-03T11:27:33.2493272Z"}_
+_{"Operation":"Mult","Calculation":"5 * 5 * 5 * 5 * 5 * 5 = 15625","Date":"2019-10-03T11:27:49.1789882Z"}_
+_{"Operation":"Div","Calculation":"5.2 / 2 = Quotient(2.6) & Remainder(1.2)","Date":"2019-10-03T11:28:02.2370924Z"}_
+_{"Operation":"Div","Calculation":"5 / 5 = Quotient(1) & Remainder(0)","Date":"2019-10-03T11:28:09.2109404Z"}_
+_{"Operation":"Div","Calculation":"55 / 5 = Quotient(11) & Remainder(0)","Date":"2019-10-03T11:28:12.810744Z"}_
+_{"Operation":"Sqrt","Calculation":" √5.8 = 2.40831891575846","Date":"2019-10-03T11:28:23.5927006Z"}_

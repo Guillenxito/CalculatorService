@@ -368,7 +368,7 @@ namespace Client
 					stop = false;
 					data = null;
 				}
-				else if (operatorString.StartsWith("."))
+				else if (operatorString.StartsWith(".") || operatorString.Contains(","))
 				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
@@ -437,7 +437,8 @@ namespace Client
 				} else if ((operatorString.ToUpper()).Equals("SALIR")) {
 					i = 1 + reply;
 					data = null;
-				}else if (operatorString.StartsWith(".")){
+				}else if (operatorString.StartsWith(".") || operatorString.Contains(","))
+				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
 					--i;

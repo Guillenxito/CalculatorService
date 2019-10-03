@@ -31,13 +31,13 @@ namespace CalculatorS.Controllers
 						objectFinalError.Error400();
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
-					//if (num.StartsWith(".")) {
-					//	Error objectFinalError = new Error();
-					//	objectFinalError.Error400();
-					//	objectFinalError.ErrorMessage = "Valores introducidos son invalidos.";
-					//	return JsonConvert.SerializeObject(objectFinalError);
-					//}
-					result += Convert.ToDouble(num);
+					if(num.Contains(",")) {
+						string[] arr = num.Split(',');
+						string numAux = string.Join(".",arr);
+						result += Convert.ToDouble(numAux);
+					}else {
+						result += Convert.ToDouble(num);
+					}	
 				}
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
@@ -72,10 +72,10 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				double[] arr = new double[numbersForSubtract.Operators.Count];
-				List<double> list = new List<double>();
+				
 
 				double numD;
+				List<double> list = new List<double>();
 				foreach (string num in numbersForSubtract.Operators)
 				{
 					if (!double.TryParse(num, out numD))
@@ -84,23 +84,28 @@ namespace CalculatorS.Controllers
 						objectFinalError.Error400();
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
-					result += Convert.ToDouble(num);
-				}
 
-				for (int i = 0; i < numbersForSubtract.Operators.Count; i++) {
-					list.Add(Convert.ToDouble(numbersForSubtract.Operators[i]));
+					if (num.Contains(","))
+					{
+						string[] arrSub = num.Split(',');
+						string numAux = string.Join(".", arrSub);
+						list.Add(Convert.ToDouble(numAux));
+					}
+					else
+					{
+						list.Add(Convert.ToDouble(num));
+					}
 				}
-
-				list.Sort();
-				list.Reverse();
 				result = list[0];
 				list.RemoveRange(0,1);
 				
-
 				foreach (double num in list)
 				{
 					result = result - num;
+				
 				}
+
+				result = Math.Round(result,2);
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
 					string calculation = string.Join(" - ", numbersForSubtract.Operators);
@@ -133,6 +138,8 @@ namespace CalculatorS.Controllers
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
+
+
 	
 				double numD;
 				foreach (string num in numbersForMult.Factors)
@@ -143,7 +150,17 @@ namespace CalculatorS.Controllers
 						objectFinalError.Error400();
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
-					result *= Convert.ToDouble(num);
+					if (num.Contains(","))
+					{
+						string[] arr = num.Split(',');
+						string numAux = string.Join(".", arr);
+						result += Convert.ToDouble(numAux);
+					}
+					else
+					{
+						result *= Convert.ToDouble(num);
+					}
+					
 				}
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
@@ -189,6 +206,20 @@ namespace CalculatorS.Controllers
 					objectFinalError.Error400();
 					objectFinalError.ErrorMessage = "Cannot be divided by 0";
 					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
+				if (numbersForDiv.Dividend.Contains(","))
+				{
+					string[] arr = numbersForDiv.Dividend.Split(',');
+					string numAux = string.Join(".", arr);
+					numbersForDiv.Dividend = numAux;
+				}
+
+				if (numbersForDiv.Divisor.Contains(","))
+				{
+					string[] arr = numbersForDiv.Divisor.Split(',');
+					string numAux = string.Join(".", arr);
+					numbersForDiv.Divisor = numAux;
 				}
 
 				double Quotient = Convert.ToDouble(numbersForDiv.Dividend) / Convert.ToDouble(numbersForDiv.Divisor);
@@ -240,6 +271,12 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
+				if (numberForSQRT.Number.Contains(","))
+				{
+					string[] arr = numberForSQRT.Number.Split(',');
+					string numAux = string.Join(".", arr);
+					numberForSQRT.Number = numAux;
+				}
 				SQRTsquare objectFinal = new SQRTsquare();
 				double result = Math.Sqrt(Convert.ToDouble(numberForSQRT.Number));
 
