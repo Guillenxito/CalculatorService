@@ -225,9 +225,6 @@ namespace CalculatorS.Controllers
 				double Quotient = Convert.ToDouble(numbersForDiv.Dividend) / Convert.ToDouble(numbersForDiv.Divisor);
 				double Remainder = Convert.ToDouble(numbersForDiv.Dividend) % Convert.ToDouble(numbersForDiv.Divisor);
 				DivQuotientRemainder objectFinal = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
-				//objectFinal.Quotient = Convert.ToString(Quotient);
-				//objectFinal.Remainder = Convert.ToString(Remainder);
-
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
 					string calculation = numbersForDiv.Dividend + " / " + numbersForDiv.Divisor + " = Quotient(" + objectFinal.Quotient+ ") & Remainder("+ objectFinal.Remainder + ")";

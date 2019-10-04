@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Client.Models;
 
 namespace Client
@@ -15,174 +12,160 @@ namespace Client
 		protected static string urlServer = "http://localhost:50727/CalculatorS/";
 		protected static string action = "";
 		protected static string idHistorial = "";
+		protected static bool operation = true;
+		protected static string mainOption = "Default";
 		static void Main(string[] args)
 		{
-
-
-
-			//bool operation = false;
-			string mainOption = "Default";
-			bool operation = true;
 			do {
 				displayMainMenu();
 				mainOption = Console.ReadLine();
 
 				if (mainOption != "0")
 				{
-					switch (mainOption)
-					{
-						case "0":
-						case "SALIR":
-							mainOption = "0";
-							//Environment.Exit(-1);
-							break;
-						case "1":
-							idHistorial = generarId();
-							mainOption = "Default";
-							operation = true;
-							break;
-						case "2":
-							idHistorial = "";
-							mainOption = "Default";
-							operation = true;
-							break;
-						case "3":
-							Console.Clear();
-							Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
-							action = "ExistJournal";
-							string idHistorialUtility = Console.ReadLine();
-							if (!idHistorialUtility.ToUpper().Equals("ACTUAL"))
-							{
-								idHistorial = idHistorialUtility;
-							}
-							Journal journal = new Journal(idHistorial);
-							string resultfinal = makeRequest(JsonConvert.SerializeObject(journal));
-							if(resultfinal == "") {
-								Console.WriteLine("El ID no existe. No se guardara el historial.");
-								idHistorial = "";
-								Console.ReadKey();
-								operation = false;
-							}else {
-								operation = true;
-							}
-							mainOption = "Default";
-							break;
-						case "4":
-							Console.Clear();
-							Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
-							action = "ExistJournal";
-							string idHistorialQuery = Console.ReadLine();
-							if(!idHistorialQuery.ToUpper().Equals("ACTUAL")) {
-								idHistorial = idHistorialQuery;
-							}
-							if (!idHistorialQuery.Equals(""))
-							{
-								Journal eJournal = new Journal(idHistorial);
-								string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
-								if (eResultfinal != "")
-								{
-									action = "Journal";
-									Journal journalTwo = new Journal(idHistorial);
-									string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
-									string[] resultFinalArr = resultfinalTwo.Split('_');
-									Console.Clear();
-									foreach (string element in resultFinalArr)
-									{
-										Console.WriteLine(element);
-									}
-								}
-								else
-								{
-									Console.Clear();
-									idHistorial = "";
-									operation = false;
-									Console.WriteLine("Historial no existente");
-								}
-							} else {
-								operation = false;
-								Console.WriteLine("Tienes que introducir un valor...");
-							}
-							
-							Console.WriteLine(Environment.NewLine + "Pulsa Enter para continuar.");
-							Console.ReadKey();
-							mainOption = "Default";
-							break;
-						default:
-							Console.WriteLine("Valor \"{0}\" es invalido.", mainOption);
-							Console.ReadKey();
-							mainOption = "Default";
-							break;
-					}
-
-					//bool operation = false;
-					
-					string option = "Default";
-					while(operation) {
-						displayMenu();
-						option = Console.ReadLine();
-						operation = getOption(option);
-						if (operation)
-						{
-							if (!action.Equals("Default"))
-							{
-								List<string> data;
-								switch (action)
-								{
-									case "Div":
-										data = getDataPro(2);
-										break;
-									case "Sqrt":
-										data = getDataPro(1);
-										break;
-									default:
-										data = getData();
-										break;
-								}
-								if (data == null)
-								{
-									Console.WriteLine("OPERACION CANCELADA");
-								}
-								else
-								{
-									showResult(data);
-									Console.ReadKey();
-									//displayMainMenu();
-								}
-							}
-						}
-					}
-
+					getMainOption();
+					showMainResult();
 				}
+
 			} while (mainOption != "0" );
 
-			Console.WriteLine(Environment.NewLine + "---------PROGRAMA FINALIZADO-------------");
-			Console.ReadKey();
+			programCompleted();
 
 		}//Main
 
-		public static string generarId() {
-			Random rnd = new Random();
-			string x = Convert.ToString(rnd.Next(0, 10000));
-			x = x.PadLeft(5, '0');
-			return x;
-		}
+		public static void programCompleted() {
+			Console.WriteLine(Environment.NewLine + "---------PROGRAMA FINALIZADO-------------");
+			Console.ReadKey();
+		}//programCompleted
 
-		public static void displayMainMenu() {
-			Console.Clear();
-			Console.Write("** CALCULATOR SERVICE **");
-			if (idHistorial != "") {
-				Console.Write(" Numero de Historial: " + idHistorial);
+		public static void showMainResult()
+		{
+			string option = "Default";
+			while (operation)
+			{
+				displayMenu();
+				option = Console.ReadLine();
+				operation = getOption(option);
+
+				if (operation)
+				{
+					if (!action.Equals("Default"))
+					{
+						List<string> data;
+						switch (action)
+						{
+							case "Div":
+								data = getDataPro(2);
+								break;
+							case "Sqrt":
+								data = getDataPro(1);
+								break;
+							default:
+								data = getData();
+								break;
+						}
+						if (data != null)
+						{
+							Console.WriteLine(showResult(data));
+							Console.ReadKey();
+						}
+					}
+				}
+			}//while
+		}//showResult
+
+		public static void getMainOption() {
+			switch (mainOption)
+			{
+				case "0":
+				case "SALIR":
+					mainOption = "0";
+					break;
+				case "1":
+					idHistorial = generateId();
+					mainOption = "Default";
+					operation = true;
+					break;
+				case "2":
+					idHistorial = "";
+					mainOption = "Default";
+					operation = true;
+					break;
+				case "3":
+					Console.Clear();
+					Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
+					action = "ExistJournal";
+					string idHistorialUtility = Console.ReadLine();
+					if (!idHistorialUtility.ToUpper().Equals("ACTUAL"))
+					{
+						idHistorial = idHistorialUtility;
+					}
+					Journal journal = new Journal(idHistorial);
+					string resultfinal = makeRequest(JsonConvert.SerializeObject(journal));
+					if (resultfinal == "")
+					{
+						Console.WriteLine("El ID no existe. No se guardara el historial.");
+						idHistorial = "";
+						Console.ReadKey();
+						operation = false;
+					}
+					else
+					{
+						operation = true;
+					}
+					mainOption = "Default";
+					break;
+				case "4":
+					Console.Clear();
+					Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
+					action = "ExistJournal";
+					string idHistorialQuery = Console.ReadLine();
+					if (!idHistorialQuery.ToUpper().Equals("ACTUAL"))
+					{
+						idHistorial = idHistorialQuery;
+					}
+					if (!idHistorialQuery.Equals(""))
+					{
+						Journal eJournal = new Journal(idHistorial);
+						string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
+						if (eResultfinal != "")
+						{
+							action = "Journal";
+							Journal journalTwo = new Journal(idHistorial);
+							string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
+							string[] resultFinalArr = resultfinalTwo.Split('_');
+							Console.Clear();
+							foreach (string element in resultFinalArr)
+							{
+								Console.WriteLine(element);
+							}
+						}
+						else
+						{
+							Console.Clear();
+							idHistorial = "";
+							operation = false;
+							Console.WriteLine("Historial no existente.");
+						}
+					}
+					else
+					{
+						operation = false;
+						Console.WriteLine("Tienes que introducir un valor...");
+					}
+
+					Console.WriteLine(Environment.NewLine + "Pulsa Enter para continuar.");
+					Console.ReadKey();
+					mainOption = "Default";
+					break;
+				default:
+					Console.WriteLine("Valor \"{0}\" es invalido.", mainOption);
+					Console.ReadKey();
+					mainOption = "Default";
+					break;
 			}
-			Console.WriteLine(Environment.NewLine);
-			Console.WriteLine("0. Salir" + Environment.NewLine);
-			Console.WriteLine("1. Operar usando un NUEVO Historial"+ Environment.NewLine);
-			Console.WriteLine("2. Operar SIN historial" + Environment.NewLine);
-			Console.WriteLine("3. Operar usando un historial ya existente."+ Environment.NewLine);
-			Console.WriteLine("4. Consultar Historial." + Environment.NewLine);
-			Console.Write("Respuesta: ");
-		}
+		}//getMainOption
 
-		public static void showResult(List<string> data) {
+		public static string showResult(List<string> data) {
 			string responseFinal = null;
 			string responseServer = "";
 			switch (action)
@@ -255,16 +238,14 @@ namespace Client
 					}
 					break;
 			}
-			Console.Write(Environment.NewLine + "Resultado: " + responseFinal);
-			Console.Write(Environment.NewLine + "Pulse \'Enter\' para continuar.");
-			Console.ReadKey();
+			return (Environment.NewLine + "Resultado: " + responseFinal + Environment.NewLine + "Pulse \'Enter\' para continuar.");
 
-		}
+		}//showResult
 
 		public static void displayMenu()
 		{
 			Console.Clear();
-			Console.WriteLine("** CALCULATOR SERVICE **");
+			Console.Write("** CALCULATOR SERVICE **");
 			if (idHistorial != "")
 			{
 				Console.WriteLine(" Numero de Historial: " + idHistorial);
@@ -279,9 +260,35 @@ namespace Client
 			Console.Write("Respuesta: ");
 		}//displayMenu
 
+		public static void displayMainMenu()
+		{
+			Console.Clear();
+			Console.Write("** CALCULATOR SERVICE **");
+			if (idHistorial != "")
+			{
+				Console.Write(" Numero de Historial: " + idHistorial);
+			}
+			Console.WriteLine(Environment.NewLine);
+			Console.WriteLine("0. Salir" + Environment.NewLine);
+			Console.WriteLine("1. Operar usando un NUEVO Historial" + Environment.NewLine);
+			Console.WriteLine("2. Operar SIN historial" + Environment.NewLine);
+			Console.WriteLine("3. Operar usando un historial ya existente." + Environment.NewLine);
+			Console.WriteLine("4. Consultar Historial." + Environment.NewLine);
+			Console.Write("Respuesta: ");
+		}//displayMainMenu
+
+		public static void displayInstructions() {
+			Console.Clear();
+			Console.WriteLine("		--INSTRUCCIONES ({0})--", getAction());
+			Console.WriteLine(" * Introduce cada operando uno por uno pulsando \'ENTER\'.");
+			Console.WriteLine(" * Para realizar la operacion pulse \'ENTER\' sin escribir nada.");
+			Console.WriteLine(" * Para cancelar la operacion escriba \'SALIR\'. 	");
+			Console.WriteLine("		      ----" + Environment.NewLine);
+		}//displayInstructions
+
 		public static bool getOption(string chosenOption)
 		{
-			bool response= true;
+			bool response = true;
 			chosenOption = chosenOption.ToUpper();
 
 			switch (chosenOption)
@@ -292,34 +299,24 @@ namespace Client
 					break;
 				case "1":
 				case "SUMA":
-					Console.WriteLine("SUMANDO");
 					action = "Add";
-					//response = false;
 					break;
 				case "2":
 				case "RESTA":
-					Console.WriteLine("RESTANDO");
 					action = "Sub";
-					//response = false;
 					break;
 				case "3":
 				case "MULTIPLICACION":
-					Console.WriteLine("MULTIPLICANDO");
 					action = "Mult";
-					//response = false;
 					break;
 				case "4":
 				case "DIVISION":
-					Console.WriteLine("DIVIENDO");
 					action = "Div";
-					//response = false;
 					break;
 				case "5":
 				case "RAIZ":
 				case "RAIZ CUADRADA":
-					Console.WriteLine("REALIZANDO RAIZ CUADRADA");
 					action = "Sqrt";
-					//response = false;
 					break;
 				default:
 					Console.WriteLine("Valor \'{0}\' es Invalido.", chosenOption);
@@ -333,26 +330,31 @@ namespace Client
 
 		}//getOption
 
+		// Unificar getData y getDataPro
+
 		public static List<string> getData()
 		{
 			List<string> data = new List<string>();
 			Console.Clear();
-			
+
 			bool stop = true;
 			string operatorString;
 			double operatorInt;
 
 			displayInstructions();
 
-			while (stop == true) {
+			while (stop == true)
+			{
 				Console.Write("  ");
 
-				foreach(string ele in data) {
+				foreach (string ele in data)
+				{
 					Console.Write(ele + getSymbolAction());
 				}
 
 				operatorString = Console.ReadLine();
-				if (operatorString == String.Empty && data.Count == 0) {
+				if (operatorString == String.Empty && data.Count == 0)
+				{
 					Console.WriteLine("Campo vacio.");
 					Console.ReadKey();
 					displayInstructions();
@@ -361,7 +363,7 @@ namespace Client
 				{
 					stop = false;
 					displayInstructions();
-					Console.WriteLine(String.Join(getSymbolAction(),data));
+					Console.WriteLine(String.Join(getSymbolAction(), data));
 				}
 				else if ((operatorString.ToUpper()).Equals("SALIR"))
 				{
@@ -390,23 +392,15 @@ namespace Client
 			return data;
 		}//getData
 
-		public static void displayInstructions() {
-			Console.Clear();
-			Console.WriteLine("		--INSTRUCCIONES ({0})--", getAction());
-			Console.WriteLine(" * Introduce cada operando uno por uno pulsando \'ENTER\'.");
-			Console.WriteLine(" * Para realizar la operacion pulse \'ENTER\' sin escribir nada.");
-			Console.WriteLine(" * Para cancelar la operacion escriba \'SALIR\'. 	");
-			Console.WriteLine("		      ----" + Environment.NewLine);
-		}
-
-		public static List<string> getDataPro(int reply = 0)
+		public static List<string> getDataPro(int reply)
 		{
 			List<string> data = new List<string>();
 			string operatorString;
 			double operatorDouble;
-	
-			for (int i = 0; i < reply;i++) {
-				Console.Write("  "); 
+
+			for (int i = 0; i < reply; i++)
+			{
+				Console.Write("  ");
 				displayInstructions();
 				foreach (string ele in data)
 				{
@@ -416,9 +410,9 @@ namespace Client
 					}
 					else
 					{
-						Console.Write(ele + getSymbolAction() );
+						Console.Write(ele + getSymbolAction());
 					}
-					
+
 				}
 
 				if (action.Equals("Sqrt"))
@@ -428,31 +422,39 @@ namespace Client
 
 				operatorString = Console.ReadLine();
 
-				if (operatorString == String.Empty) {
+				if (operatorString == String.Empty)
+				{
 					Console.WriteLine("Campo vacio.");
 					Console.ReadKey();
 					displayInstructions();
 					--i;
 					Console.WriteLine(String.Join(getSymbolAction(), data));
-				} else if ((operatorString.ToUpper()).Equals("SALIR")) {
+				}
+				else if ((operatorString.ToUpper()).Equals("SALIR"))
+				{
 					i = 1 + reply;
 					data = null;
-				}else if (operatorString.EndsWith(".") || operatorString.StartsWith(".") || operatorString.Contains(","))
+				}
+				else if (operatorString.EndsWith(".") || operatorString.StartsWith(".") || operatorString.Contains(","))
 				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
 					--i;
 				}
-				else if ((Double.TryParse(operatorString, out operatorDouble))) {
+				else if ((Double.TryParse(operatorString, out operatorDouble)))
+				{
 					displayInstructions();
 					data.Add(operatorString);
-				} else {
+				}
+				else
+				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
 					--i;
 				}
 			}//for
-			if(data!= null){
+			if (data != null)
+			{
 				if (action.Equals("Sqrt"))
 				{
 					Console.WriteLine(getSymbolAction() + data[0]);
@@ -464,7 +466,7 @@ namespace Client
 			}
 
 			return data;
-		}//getData
+		}//getDataPro
 
 		public static string makeRequest(string objString) {
 		var resultJSON = "";
@@ -519,7 +521,7 @@ namespace Client
 			}
 
 			return actionFinal;
-		}
+		}//getAction
 
 		public static string getSymbolAction()
 		{
@@ -547,6 +549,15 @@ namespace Client
 			}
 
 			return actionFinal;
-		}
+		}//getSymbolAction
+
+		public static string generateId()
+		{
+			Random rnd = new Random();
+			string x = Convert.ToString(rnd.Next(0, 10000));
+			x = x.PadLeft(5, '0');
+			return x;
+		}//generateId
+
 	}//program
 }
