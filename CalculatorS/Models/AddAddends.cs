@@ -15,7 +15,6 @@ namespace CalculatorS.Models
 
 		public AddAddends() {
 		}
-		
-
+	
 	}
 }

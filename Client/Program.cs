@@ -23,7 +23,7 @@ namespace Client
 				if (mainOption != "0")
 				{
 					getMainOption();
-					showMainResult();
+					showResult();
 				}
 
 			} while (mainOption != "0" );
@@ -37,7 +37,7 @@ namespace Client
 			Console.ReadKey();
 		}//programCompleted
 
-		public static void showMainResult()
+		public static void showResult()
 		{
 			string option = "Default";
 			while (operation)
@@ -54,10 +54,10 @@ namespace Client
 						switch (action)
 						{
 							case "Div":
-								data = getDataPro(2);
+								data = getDataReply(2);
 								break;
 							case "Sqrt":
-								data = getDataPro(1);
+								data = getDataReply(1);
 								break;
 							default:
 								data = getData();
@@ -65,7 +65,7 @@ namespace Client
 						}
 						if (data != null)
 						{
-							Console.WriteLine(showResult(data));
+							Console.WriteLine(calculate(data));
 							Console.ReadKey();
 						}
 					}
@@ -164,83 +164,133 @@ namespace Client
 					break;
 			}
 		}//getMainOption
-
-		public static string showResult(List<string> data) {
+		
+		public static string add(List<string> data) {
 			string responseFinal = null;
 			string responseServer = "";
+			AddAddends objAddAddends = new AddAddends(data);
+			responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
+
+			AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
+
+			if (objAddSum.Sum == null)
+			{
+				Error ErrorAdd = JsonConvert.DeserializeObject<Error>(responseServer);
+				responseFinal = ErrorAdd.ErrorMessage;
+			}
+			else
+			{
+				responseFinal = objAddSum.Sum;
+			}
+			return responseFinal;
+		}//Add
+
+		public static string sub(List<string> data)
+		{
+			string responseFinal = null;
+			string responseServer = "";
+			SubOperators objSubOperators = new SubOperators(data);
+			responseServer = makeRequest(JsonConvert.SerializeObject(objSubOperators));
+
+			SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
+
+			if (objSubDiference.Diference == null)
+			{
+				Error ErrorSub = JsonConvert.DeserializeObject<Error>(responseServer);
+				responseFinal = ErrorSub.ErrorMessage;
+			}
+			else
+			{
+				responseFinal = objSubDiference.Diference;
+			}
+			return responseFinal;
+		}//Sub
+
+		public static string mult(List<string> data)
+		{
+			string responseFinal = null;
+			string responseServer = "";
+			MultFactors objMulFactors = new MultFactors(data);
+			responseServer = makeRequest(JsonConvert.SerializeObject(objMulFactors));
+
+			MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
+
+			if (objMultProduct.Product == null)
+			{
+				Error ErrorMult = JsonConvert.DeserializeObject<Error>(responseServer);
+				responseFinal = ErrorMult.ErrorMessage;
+			}
+			else
+			{
+				responseFinal = objMultProduct.Product;
+			}
+			return responseFinal;
+		}//Mult
+
+		public static string div(List<string> data)
+		{
+			string responseFinal = null;
+			string responseServer = "";
+			DivDividendDivisor objDivDividendDivisor = new DivDividendDivisor(Convert.ToString(data[0]), Convert.ToString(data[1]));
+			responseServer = makeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
+
+			var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
+
+			if (objFinalDiv.Quotient == null && objFinalDiv.Remainder == null)
+			{
+				Error ErrorDiv = JsonConvert.DeserializeObject<Error>(responseServer);
+				responseFinal = ErrorDiv.ErrorMessage;
+			}
+			else
+			{
+				responseFinal = "Cociente: " + objFinalDiv.Quotient + " Resto: " + objFinalDiv.Remainder;
+			}
+			return responseFinal;
+		}//Div
+
+		public static string sqrt(List<string> data)
+		{
+			string responseFinal = null;
+			string responseServer = "";
+			SQRTnumber objSqrtNumber = new SQRTnumber(Convert.ToString(data[0]));
+			responseServer = makeRequest(JsonConvert.SerializeObject(objSqrtNumber));
+
+			var objFinalSqrt = JsonConvert.DeserializeObject<SQRTsquare>(responseServer);
+			if (objFinalSqrt.Square == null)
+			{
+				Error ErrorSqrt = JsonConvert.DeserializeObject<Error>(responseServer);
+				responseFinal = ErrorSqrt.ErrorMessage;
+			}
+			else
+			{
+				responseFinal = objFinalSqrt.Square;
+			}
+			return responseFinal;
+		}//Sqrt
+
+		public static string calculate(List<string> data) {
+			string responseFinal = null;
 			switch (action)
 			{
 				case "Add":
-					AddAddends objAddAddends = new AddAddends(data);
-					responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
-
-					AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
-
-					if (objAddSum.Sum == null){
-						Error ErrorAdd = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = ErrorAdd.ErrorMessage;
-					}else {
-						responseFinal = objAddSum.Sum;
-					}
+					responseFinal = add(data);
 					break;
-
 				case "Sub":
-					SubOperators objSubOperators = new SubOperators(data);
-					responseServer = makeRequest(JsonConvert.SerializeObject(objSubOperators));
-
-					SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
-
-					if(objSubDiference.Diference == null) {
-						Error ErrorSub = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = ErrorSub.ErrorMessage;
-					}else {
-						responseFinal = objSubDiference.Diference;
-					}
+					responseFinal = sub(data);
 					break;
-
 				case "Mult":
-					MultFactors objMulFactors = new MultFactors(data);
-					responseServer = makeRequest(JsonConvert.SerializeObject(objMulFactors));
-
-					MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
-
-					if (objMultProduct.Product == null){
-						Error ErrorMult = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = ErrorMult.ErrorMessage;
-					} else {
-						responseFinal = objMultProduct.Product;
-					}
+					responseFinal = mult(data);
 					break;
-
 				case "Div":
-					DivDividendDivisor objDivDividendDivisor = new DivDividendDivisor(Convert.ToString(data[0]), Convert.ToString(data[1]));
-					responseServer = makeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
-
-					var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
-
-					if (objFinalDiv.Quotient == null && objFinalDiv.Remainder == null) {
-						Error ErrorDiv = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = ErrorDiv.ErrorMessage;
-					} else {
-						responseFinal = "Cociente: " + objFinalDiv.Quotient + " Resto: " + objFinalDiv.Remainder;
-					}
+					responseFinal = div(data);
 					break;
 				case "Sqrt":
-					SQRTnumber objSqrtNumber = new SQRTnumber(Convert.ToString(data[0]));
-					responseServer = makeRequest(JsonConvert.SerializeObject(objSqrtNumber));
-
-					var objFinalSqrt = JsonConvert.DeserializeObject<SQRTsquare>(responseServer);
-					if(objFinalSqrt.Square == null) {
-						Error ErrorSqrt = JsonConvert.DeserializeObject<Error>(responseServer);
-						responseFinal = ErrorSqrt.ErrorMessage;
-					}else {
-						responseFinal = objFinalSqrt.Square;
-					}
+					responseFinal = sqrt(data);
 					break;
 			}
 			return (Environment.NewLine + "Resultado: " + responseFinal + Environment.NewLine + "Pulse \'Enter\' para continuar.");
 
-		}//showResult
+		}//Calculate
 
 		public static void displayMenu()
 		{
@@ -330,8 +380,6 @@ namespace Client
 
 		}//getOption
 
-		// Unificar getData y getDataPro
-
 		public static List<string> getData()
 		{
 			List<string> data = new List<string>();
@@ -347,10 +395,7 @@ namespace Client
 			{
 				Console.Write("  ");
 
-				foreach (string ele in data)
-				{
-					Console.Write(ele + getSymbolAction());
-				}
+				showData(data);
 
 				operatorString = Console.ReadLine();
 				if (operatorString == String.Empty && data.Count == 0)
@@ -392,28 +437,19 @@ namespace Client
 			return data;
 		}//getData
 
-		public static List<string> getDataPro(int reply)
-		{
+		public static List<string> getDataReply(int reply) {
+		//VARIABLES
 			List<string> data = new List<string>();
 			string operatorString;
 			double operatorDouble;
+
+			Console.Clear();
 
 			for (int i = 0; i < reply; i++)
 			{
 				Console.Write("  ");
 				displayInstructions();
-				foreach (string ele in data)
-				{
-					if (action.Equals("Sqrt"))
-					{
-						Console.Write(getSymbolAction() + ele);
-					}
-					else
-					{
-						Console.Write(ele + getSymbolAction());
-					}
-
-				}
+				showData(data);
 
 				if (action.Equals("Sqrt"))
 				{
@@ -432,7 +468,6 @@ namespace Client
 				}
 				else if ((operatorString.ToUpper()).Equals("SALIR"))
 				{
-					i = 1 + reply;
 					data = null;
 				}
 				else if (operatorString.EndsWith(".") || operatorString.StartsWith(".") || operatorString.Contains(","))
@@ -455,18 +490,38 @@ namespace Client
 			}//for
 			if (data != null)
 			{
-				if (action.Equals("Sqrt"))
-				{
-					Console.WriteLine(getSymbolAction() + data[0]);
-				}
-				else
-				{
-					Console.WriteLine(String.Join(getSymbolAction(), data));
-				}
+				showDataFinal(data);
 			}
 
 			return data;
-		}//getDataPro
+		}//getDataReply
+
+		public static void showData( List<string> data) {
+			foreach (string ele in data)
+			{
+				if (action.Equals("Sqrt"))
+				{
+					Console.Write(getSymbolAction() + ele);
+				}
+				else
+				{
+					Console.Write(ele + getSymbolAction());
+				}
+
+			}
+		}//showData
+
+		public static void showDataFinal(List<string> data)
+		{
+			if (action.Equals("Sqrt"))
+			{
+				Console.WriteLine(getSymbolAction() + data[0]);
+			}
+			else
+			{
+				Console.WriteLine(String.Join(getSymbolAction(), data));
+			}
+		}//showDataFinal
 
 		public static string makeRequest(string objString) {
 		var resultJSON = "";
@@ -474,14 +529,14 @@ namespace Client
 			httpWebRequest.ContentType = "application/json";
 			httpWebRequest.Method = "POST";
 			httpWebRequest.Headers["X-Evi-Tracking-Id"] = idHistorial;
-			
-			using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-			{
-				streamWriter.Write(objString);
-				streamWriter.Close();
-			}
 			try
 			{
+				using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+				{
+					streamWriter.Write(objString);
+					streamWriter.Close();
+				}
+
 				var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 				using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
 				{
