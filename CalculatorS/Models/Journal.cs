@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 
 namespace CalculatorS.Models
@@ -17,7 +18,7 @@ namespace CalculatorS.Models
 
 		public void SaveJournal(string operation)
 		{
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
 			if (!File.Exists(mainPath))
 			{
 				using (StreamWriter mylogs = File.AppendText(mainPath)) 
@@ -36,7 +37,7 @@ namespace CalculatorS.Models
 		}//SaveJournal
 
 		public bool ExistJournal() {
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
 			if ( File.Exists(mainPath)) {
 				return true;
 			}
@@ -45,7 +46,7 @@ namespace CalculatorS.Models
 
 		public string ReadJournal() {
 
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
 
 			string line = "";
 			string text = "";
