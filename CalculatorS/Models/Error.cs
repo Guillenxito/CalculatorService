@@ -26,6 +26,13 @@ namespace CalculatorS.Models
 			ErrorMessage = "Unable to process request: ...";
 		}
 
+		public void Error400(string message)
+		{
+			ErrorCode = "InternalError";
+			ErrorStatus = "400";
+			ErrorMessage = message;
+		}
+
 		public void Error500(string message) {
 			ErrorCode = "InternalError";
 			ErrorStatus = "500";

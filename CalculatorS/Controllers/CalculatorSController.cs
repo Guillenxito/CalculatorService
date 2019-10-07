@@ -44,7 +44,12 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sum", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.SaveJournal(jsonOperation);
+					if (!journal.SaveJournal(jsonOperation))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error500("No se ha encontrado el directorio.");
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
 				}
 
 				objectFinal.Sum = Convert.ToString(result);
@@ -110,7 +115,12 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sub", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.SaveJournal(jsonOperation);
+					if (!journal.SaveJournal(jsonOperation))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error500("No se ha encontrado el directorio.");
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
 				}
 				objectFinal.Diference = Convert.ToString(result);
 				return JsonConvert.SerializeObject(objectFinal);
@@ -167,7 +177,12 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Mult", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.SaveJournal(jsonOperation);
+					if (!journal.SaveJournal(jsonOperation))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error500("No se ha encontrado el directorio.");
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
 				}
 
 				objectFinal.Product = Convert.ToString(result);
@@ -229,7 +244,11 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Div", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.SaveJournal(jsonOperation);
+					if (!journal.SaveJournal(jsonOperation)) {
+						Error objectFinalError = new Error();
+						objectFinalError.Error500("No se ha encontrado el directorio.");
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
 				}
 				return JsonConvert.SerializeObject(objectFinal);
 			}
@@ -281,7 +300,12 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sqrt", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.SaveJournal(jsonOperation);
+					if (!journal.SaveJournal(jsonOperation))
+					{
+						Error objectFinalError = new Error();
+						objectFinalError.Error500("No se ha encontrado el directorio.");
+						return JsonConvert.SerializeObject(objectFinalError);
+					}
 				}
 
 				objectFinal.Square = Convert.ToString(result);
@@ -306,34 +330,6 @@ namespace CalculatorS.Controllers
 			return IdForJournal.ExistJournal();
 
 		}//ExistJournal
-
-		//public string ExistJournal(Journal IdForJournal)
-		//{
-		//	try
-		//	{
-		//		if (IdForJournal.Id == null || IdForJournal == null)
-		//		{
-		//			Error objectFinalError = new Error();
-		//			objectFinalError.Error400();
-		//			return JsonConvert.SerializeObject(objectFinalError);
-		//		}
-
-
-		//		if (IdForJournal.ExistJournal())
-		//		{
-		//			return IdForJournal.Id;
-		//		}
-
-		//		return null;
-
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Error objectFinalError = new Error();
-		//		objectFinalError.Error500(ex.ToString());
-		//		return JsonConvert.SerializeObject(objectFinalError);
-		//	}
-		//}//ExistJournal
 
 		[HttpPost] //CLOSED
 		public string Journal(Journal IdForJournal)
