@@ -10,10 +10,10 @@ namespace CalculatorS.Controllers
     public class CalculatorSController : Controller
     {
 		[HttpPost] //CLOSED
-		public string Add(AddAddends numbersForAdd)
+		public string Add(AddAddends NumbersForAdd)
 		{
 			try {
-				if (numbersForAdd.Addends == null || numbersForAdd == null)
+				if (NumbersForAdd.Addends == null || NumbersForAdd == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -22,7 +22,7 @@ namespace CalculatorS.Controllers
 				AddSum objectFinal = new AddSum();
 				double result = 0;
 				double numD;
-				foreach (string num in numbersForAdd.Addends)
+				foreach (string num in NumbersForAdd.Addends)
 				{
 					if (!double.TryParse(num, out numD)){
 						Error objectFinalError = new Error();
@@ -40,11 +40,11 @@ namespace CalculatorS.Controllers
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = string.Join(" + ", numbersForAdd.Addends);
+					string calculation = string.Join(" + ", NumbersForAdd.Addends);
 					Query Operation = new Query("Sum", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.saveJournal(jsonOperation);
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Sum = Convert.ToString(result);
@@ -57,13 +57,13 @@ namespace CalculatorS.Controllers
 		}//Add
 
 		[HttpPost] //CLOSED
-		public string Sub (SubOperators numbersForSubtract)
+		public string Sub (SubOperators NumbersForSubtract)
 		{
 			try { 
 				double result = 0;
 				SubDiference objectFinal = new SubDiference();
 
-				if (numbersForSubtract.Operators == null || numbersForSubtract == null)
+				if (NumbersForSubtract.Operators == null || NumbersForSubtract == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -74,7 +74,7 @@ namespace CalculatorS.Controllers
 
 				double numD;
 				List<double> list = new List<double>();
-				foreach (string num in numbersForSubtract.Operators)
+				foreach (string num in NumbersForSubtract.Operators)
 				{
 					if (!double.TryParse(num, out numD))
 					{
@@ -106,11 +106,11 @@ namespace CalculatorS.Controllers
 				result = Math.Round(result,2);
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = string.Join(" - ", numbersForSubtract.Operators);
+					string calculation = string.Join(" - ", NumbersForSubtract.Operators);
 					Query Operation = new Query("Sub", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.saveJournal(jsonOperation);
+					journal.SaveJournal(jsonOperation);
 				}
 				objectFinal.Diference = Convert.ToString(result);
 				return JsonConvert.SerializeObject(objectFinal);
@@ -124,13 +124,13 @@ namespace CalculatorS.Controllers
 		}//Sub
 
 		[HttpPost] //CLOSED
-		public string Mult(MultFactors numbersForMult)
+		public string Mult(MultFactors NumbersForMult)
 		{ 
 			try {
 				double result = 1;
 				MultProduct objectFinal = new MultProduct();
 
-				if (numbersForMult.Factors == null || numbersForMult == null)
+				if (NumbersForMult.Factors == null || NumbersForMult == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -140,7 +140,7 @@ namespace CalculatorS.Controllers
 
 	
 				double numD;
-				foreach (string num in numbersForMult.Factors)
+				foreach (string num in NumbersForMult.Factors)
 				{
 					if (!double.TryParse(num, out numD))
 					{
@@ -163,11 +163,11 @@ namespace CalculatorS.Controllers
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = string.Join(" * ", numbersForMult.Factors);
+					string calculation = string.Join(" * ", NumbersForMult.Factors);
 					Query Operation = new Query("Mult", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.saveJournal(jsonOperation);
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Product = Convert.ToString(result);
@@ -181,10 +181,10 @@ namespace CalculatorS.Controllers
 		}//Mult
 
 		[HttpPost] //CLOSED
-		public string Div(DivDividendDivisor numbersForDiv)
+		public string Div(DivDividendDivisor NumbersForDiv)
 		{
 			try { 
-				if (numbersForDiv.Dividend == null && numbersForDiv.Divisor == null || numbersForDiv == null)
+				if (NumbersForDiv.Dividend == null && NumbersForDiv.Divisor == null || NumbersForDiv == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -192,44 +192,44 @@ namespace CalculatorS.Controllers
 				}
 
 				double numD;
-				if (!double.TryParse(numbersForDiv.Dividend, out numD) || !double.TryParse(numbersForDiv.Divisor, out numD))
+				if (!double.TryParse(NumbersForDiv.Dividend, out numD) || !double.TryParse(NumbersForDiv.Divisor, out numD))
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if (Convert.ToDouble(numbersForDiv.Dividend) == 0){
+				if (Convert.ToDouble(NumbersForDiv.Dividend) == 0){
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					objectFinalError.ErrorMessage = "Cannot be divided by 0";
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if (numbersForDiv.Dividend.Contains(","))
+				if (NumbersForDiv.Dividend.Contains(","))
 				{
-					string[] arr = numbersForDiv.Dividend.Split(',');
+					string[] arr = NumbersForDiv.Dividend.Split(',');
 					string numAux = string.Join(".", arr);
-					numbersForDiv.Dividend = numAux;
+					NumbersForDiv.Dividend = numAux;
 				}
 
-				if (numbersForDiv.Divisor.Contains(","))
+				if (NumbersForDiv.Divisor.Contains(","))
 				{
-					string[] arr = numbersForDiv.Divisor.Split(',');
+					string[] arr = NumbersForDiv.Divisor.Split(',');
 					string numAux = string.Join(".", arr);
-					numbersForDiv.Divisor = numAux;
+					NumbersForDiv.Divisor = numAux;
 				}
 
-				double Quotient = Convert.ToDouble(numbersForDiv.Dividend) / Convert.ToDouble(numbersForDiv.Divisor);
-				double Remainder = Convert.ToDouble(numbersForDiv.Dividend) % Convert.ToDouble(numbersForDiv.Divisor);
+				double Quotient = Convert.ToDouble(NumbersForDiv.Dividend) / Convert.ToDouble(NumbersForDiv.Divisor);
+				double Remainder = Convert.ToDouble(NumbersForDiv.Dividend) % Convert.ToDouble(NumbersForDiv.Divisor);
 				DivQuotientRemainder objectFinal = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = numbersForDiv.Dividend + " / " + numbersForDiv.Divisor + " = Quotient(" + objectFinal.Quotient+ ") & Remainder("+ objectFinal.Remainder + ")";
+					string calculation = NumbersForDiv.Dividend + " / " + NumbersForDiv.Divisor + " = Quotient(" + objectFinal.Quotient+ ") & Remainder("+ objectFinal.Remainder + ")";
 					Query Operation = new Query("Div", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.saveJournal(jsonOperation);
+					journal.SaveJournal(jsonOperation);
 				}
 				return JsonConvert.SerializeObject(objectFinal);
 			}
@@ -241,23 +241,23 @@ namespace CalculatorS.Controllers
 		}//Div
 
 		[HttpPost] //CLOSED
-		public string SQRT(SQRTnumber numberForSQRT)
+		public string SQRT(SQRTnumber NumberForSQRT)
 		{
 			try
 			{
-				if (numberForSQRT.Number == null || numberForSQRT == null)
+				if (NumberForSQRT.Number == null || NumberForSQRT == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 				double numD;
-				if (!double.TryParse(numberForSQRT.Number, out numD))
+				if (!double.TryParse(NumberForSQRT.Number, out numD))
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
-				}else if (0 > Convert.ToDouble(numberForSQRT.Number))
+				}else if (0 > Convert.ToDouble(NumberForSQRT.Number))
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -266,22 +266,22 @@ namespace CalculatorS.Controllers
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if (numberForSQRT.Number.Contains(","))
+				if (NumberForSQRT.Number.Contains(","))
 				{
-					string[] arr = numberForSQRT.Number.Split(',');
+					string[] arr = NumberForSQRT.Number.Split(',');
 					string numAux = string.Join(".", arr);
-					numberForSQRT.Number = numAux;
+					NumberForSQRT.Number = numAux;
 				}
 				SQRTsquare objectFinal = new SQRTsquare();
-				double result = Math.Sqrt(Convert.ToDouble(numberForSQRT.Number));
+				double result = Math.Sqrt(Convert.ToDouble(NumberForSQRT.Number));
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = " √"+ numberForSQRT.Number;
+					string calculation = " √"+ NumberForSQRT.Number;
 					Query Operation = new Query("Sqrt", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					journal.saveJournal(jsonOperation);
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Square = Convert.ToString(result);
@@ -296,11 +296,11 @@ namespace CalculatorS.Controllers
 		}//SQRT
 
 		[HttpPost] //CLOSED
-		public string existJournal(Journal idForJournal)
+		public string ExistJournal(Journal IdForJournal)
 		{
 			try
 			{
-				if (idForJournal.Id == null || idForJournal == null)
+				if (IdForJournal.Id == null || IdForJournal == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -308,8 +308,8 @@ namespace CalculatorS.Controllers
 				}
 
 
-				if (idForJournal.existJournal()) {
-					return idForJournal.Id;				
+				if (IdForJournal.ExistJournal()) {
+					return IdForJournal.Id;				
 				 }
 
 				return null;
@@ -321,23 +321,23 @@ namespace CalculatorS.Controllers
 				objectFinalError.Error500(ex.ToString());
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
-		}//existJournal
+		}//ExistJournal
 
 		[HttpPost] //CLOSED
-		public string Journal(Journal idForJournal)
+		public string Journal(Journal IdForJournal)
 		{
 			try
 			{
-				if (idForJournal.Id == null || idForJournal == null)
+				if (IdForJournal.Id == null || IdForJournal == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
-				if (idForJournal.existJournal() )
+				if (IdForJournal.ExistJournal() )
 				{
-					return idForJournal.readJournal();
+					return IdForJournal.ReadJournal();
 				}
 				return null;
 			}

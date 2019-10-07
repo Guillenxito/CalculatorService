@@ -7,3 +7,4 @@ _{"Operation":"Mult","Calculation":"5.5 * 1 = 5.5","Date":"2019-10-03T13:48:41.2
 _{"Operation":"Sqrt","Calculation":" √157.2 = 12.537942414926","Date":"2019-10-03T13:49:02.5880345Z"}_
 _{"Operation":"Sqrt","Calculation":" √15.5 = 3.93700393700591","Date":"2019-10-03T13:49:36.2779741Z"}_
 _{"Operation":"Div","Calculation":"6 / 1.3 = Quotient(4.61538461538462) & Remainder(0.8)","Date":"2019-10-03T13:50:17.9092672Z"}_
+_{"Operation":"Sum","Calculation":"5 + 5 + 5 + 5 = 20","Date":"2019-10-07T10:40:46.8399202Z"}_

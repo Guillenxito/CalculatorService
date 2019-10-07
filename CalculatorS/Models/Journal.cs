@@ -15,7 +15,7 @@ namespace CalculatorS.Models
 			Id = id;
 		}
 
-		public void saveJournal(string operation)
+		public void SaveJournal(string operation)
 		{
 			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
 			if (!File.Exists(mainPath))
@@ -33,19 +33,19 @@ namespace CalculatorS.Models
 
 				filew.Close();
 			}
-		}//saveJournal
+		}//SaveJournal
 
-		public bool existJournal() {
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
+		public bool ExistJournal() {
+			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
 			if ( File.Exists(mainPath)) {
 				return true;
 			}
 			return false;
-		}
+		}//ExistJournal
 
-		public string readJournal() {
+		public string ReadJournal() {
 
-			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Traking\\" + Id;
+			string mainPath = "C:\\dev\\CalculatorS\\CalculatorS\\Tracking\\" + Id;
 
 			string line = "";
 			string text = "";
@@ -58,7 +58,7 @@ namespace CalculatorS.Models
 
 			}
 			return text;
-		}
-				
+		}//ReadJournal
+
 	}
 }

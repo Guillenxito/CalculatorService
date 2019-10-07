@@ -17,34 +17,34 @@ namespace Client
 		static void Main(string[] args)
 		{
 			do {
-				displayMainMenu();
+				DisplayMainMenu();
 				mainOption = Console.ReadLine();
 
 				if (mainOption != "0")
 				{
-					getMainOption();
-					showResult();
+					GetMainOption();
+					ShowResult();
 				}
 
 			} while (mainOption != "0" );
 
-			programCompleted();
+			ProgramCompleted();
 
 		}//Main
 
-		public static void programCompleted() {
+		public static void ProgramCompleted() {
 			Console.WriteLine(Environment.NewLine + "---------PROGRAMA FINALIZADO-------------");
 			Console.ReadKey();
-		}//programCompleted
+		}//ProgramCompleted
 
-		public static void showResult()
+		public static void ShowResult()
 		{
 			string option = "Default";
 			while (operation)
 			{
-				displayMenu();
+				DisplayMenu();
 				option = Console.ReadLine();
-				operation = getOption(option);
+				operation = GetOption(option);
 
 				if (operation)
 				{
@@ -54,26 +54,26 @@ namespace Client
 						switch (action)
 						{
 							case "Div":
-								data = getDataReply(2);
+								data = GetDataReply(2);
 								break;
 							case "Sqrt":
-								data = getDataReply(1);
+								data = GetDataReply(1);
 								break;
 							default:
-								data = getData();
+								data = GetData();
 								break;
 						}
 						if (data != null)
 						{
-							Console.WriteLine(calculate(data));
+							Console.WriteLine(Calculate(data));
 							Console.ReadKey();
 						}
 					}
 				}
 			}//while
-		}//showResult
+		}//ShowResult
 
-		public static void getMainOption() {
+		public static void GetMainOption() {
 			switch (mainOption)
 			{
 				case "0":
@@ -81,7 +81,7 @@ namespace Client
 					mainOption = "0";
 					break;
 				case "1":
-					idHistorial = generateId();
+					idHistorial = GenerateId();
 					mainOption = "Default";
 					operation = true;
 					break;
@@ -100,7 +100,7 @@ namespace Client
 						idHistorial = idHistorialUtility;
 					}
 					Journal journal = new Journal(idHistorial);
-					string resultfinal = makeRequest(JsonConvert.SerializeObject(journal));
+					string resultfinal = MakeRequest(JsonConvert.SerializeObject(journal));
 					if (resultfinal == "")
 					{
 						Console.WriteLine("El ID no existe. No se guardara el historial.");
@@ -126,12 +126,12 @@ namespace Client
 					if (!idHistorialQuery.Equals(""))
 					{
 						Journal eJournal = new Journal(idHistorial);
-						string eResultfinal = makeRequest(JsonConvert.SerializeObject(eJournal));
+						string eResultfinal = MakeRequest(JsonConvert.SerializeObject(eJournal));
 						if (eResultfinal != "")
 						{
 							action = "Journal";
 							Journal journalTwo = new Journal(idHistorial);
-							string resultfinalTwo = makeRequest(JsonConvert.SerializeObject(journalTwo));
+							string resultfinalTwo = MakeRequest(JsonConvert.SerializeObject(journalTwo));
 							string[] resultFinalArr = resultfinalTwo.Split('_');
 							Console.Clear();
 							foreach (string element in resultFinalArr)
@@ -163,13 +163,13 @@ namespace Client
 					mainOption = "Default";
 					break;
 			}
-		}//getMainOption
+		}//GetMainOption
 		
-		public static string add(List<string> data) {
+		public static string Add(List<string> data) {
 			string responseFinal = null;
 			string responseServer = "";
 			AddAddends objAddAddends = new AddAddends(data);
-			responseServer = makeRequest(JsonConvert.SerializeObject(objAddAddends));
+			responseServer = MakeRequest(JsonConvert.SerializeObject(objAddAddends));
 
 			AddSum objAddSum = new AddSum(JsonConvert.DeserializeObject<AddSum>(responseServer).Sum);
 
@@ -185,12 +185,12 @@ namespace Client
 			return responseFinal;
 		}//Add
 
-		public static string sub(List<string> data)
+		public static string Sub(List<string> data)
 		{
 			string responseFinal = null;
 			string responseServer = "";
 			SubOperators objSubOperators = new SubOperators(data);
-			responseServer = makeRequest(JsonConvert.SerializeObject(objSubOperators));
+			responseServer = MakeRequest(JsonConvert.SerializeObject(objSubOperators));
 
 			SubDiference objSubDiference = new SubDiference(JsonConvert.DeserializeObject<SubDiference>(responseServer).Diference);
 
@@ -206,12 +206,12 @@ namespace Client
 			return responseFinal;
 		}//Sub
 
-		public static string mult(List<string> data)
+		public static string Mult(List<string> data)
 		{
 			string responseFinal = null;
 			string responseServer = "";
 			MultFactors objMulFactors = new MultFactors(data);
-			responseServer = makeRequest(JsonConvert.SerializeObject(objMulFactors));
+			responseServer = MakeRequest(JsonConvert.SerializeObject(objMulFactors));
 
 			MultProduct objMultProduct = new MultProduct(JsonConvert.DeserializeObject<MultProduct>(responseServer).Product);
 
@@ -227,12 +227,12 @@ namespace Client
 			return responseFinal;
 		}//Mult
 
-		public static string div(List<string> data)
+		public static string Div(List<string> data)
 		{
 			string responseFinal = null;
 			string responseServer = "";
 			DivDividendDivisor objDivDividendDivisor = new DivDividendDivisor(Convert.ToString(data[0]), Convert.ToString(data[1]));
-			responseServer = makeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
+			responseServer = MakeRequest(JsonConvert.SerializeObject(objDivDividendDivisor));
 
 			var objFinalDiv = JsonConvert.DeserializeObject<DivQuotientRemainder>(responseServer);
 
@@ -248,12 +248,12 @@ namespace Client
 			return responseFinal;
 		}//Div
 
-		public static string sqrt(List<string> data)
+		public static string Sqrt(List<string> data)
 		{
 			string responseFinal = null;
 			string responseServer = "";
 			SQRTnumber objSqrtNumber = new SQRTnumber(Convert.ToString(data[0]));
-			responseServer = makeRequest(JsonConvert.SerializeObject(objSqrtNumber));
+			responseServer = MakeRequest(JsonConvert.SerializeObject(objSqrtNumber));
 
 			var objFinalSqrt = JsonConvert.DeserializeObject<SQRTsquare>(responseServer);
 			if (objFinalSqrt.Square == null)
@@ -268,31 +268,31 @@ namespace Client
 			return responseFinal;
 		}//Sqrt
 
-		public static string calculate(List<string> data) {
+		public static string Calculate(List<string> data) {
 			string responseFinal = null;
 			switch (action)
 			{
 				case "Add":
-					responseFinal = add(data);
+					responseFinal = Add(data);
 					break;
 				case "Sub":
-					responseFinal = sub(data);
+					responseFinal = Sub(data);
 					break;
 				case "Mult":
-					responseFinal = mult(data);
+					responseFinal = Mult(data);
 					break;
 				case "Div":
-					responseFinal = div(data);
+					responseFinal = Div(data);
 					break;
 				case "Sqrt":
-					responseFinal = sqrt(data);
+					responseFinal = Sqrt(data);
 					break;
 			}
 			return (Environment.NewLine + "Resultado: " + responseFinal + Environment.NewLine + "Pulse \'Enter\' para continuar.");
 
 		}//Calculate
 
-		public static void displayMenu()
+		public static void DisplayMenu()
 		{
 			Console.Clear();
 			Console.Write("** CALCULATOR SERVICE **");
@@ -308,9 +308,9 @@ namespace Client
 			Console.WriteLine("	4. Division");
 			Console.WriteLine("	5. Raiz Cuadrada" + Environment.NewLine);
 			Console.Write("Respuesta: ");
-		}//displayMenu
+		}//DisplayMenu
 
-		public static void displayMainMenu()
+		public static void DisplayMainMenu()
 		{
 			Console.Clear();
 			Console.Write("** CALCULATOR SERVICE **");
@@ -325,18 +325,18 @@ namespace Client
 			Console.WriteLine("3. Operar usando un historial ya existente." + Environment.NewLine);
 			Console.WriteLine("4. Consultar Historial." + Environment.NewLine);
 			Console.Write("Respuesta: ");
-		}//displayMainMenu
+		}//DisplayMainMenu
 
-		public static void displayInstructions() {
+		public static void DisplayInstructions() {
 			Console.Clear();
-			Console.WriteLine("		--INSTRUCCIONES ({0})--", getAction());
+			Console.WriteLine("		--INSTRUCCIONES ({0})--", GetAction());
 			Console.WriteLine(" * Introduce cada operando uno por uno pulsando \'ENTER\'.");
 			Console.WriteLine(" * Para realizar la operacion pulse \'ENTER\' sin escribir nada.");
 			Console.WriteLine(" * Para cancelar la operacion escriba \'SALIR\'. 	");
 			Console.WriteLine("		      ----" + Environment.NewLine);
-		}//displayInstructions
+		}//DisplayInstructions
 
-		public static bool getOption(string chosenOption)
+		public static bool GetOption(string chosenOption)
 		{
 			bool response = true;
 			chosenOption = chosenOption.ToUpper();
@@ -378,9 +378,9 @@ namespace Client
 
 			return response;
 
-		}//getOption
+		}//GetOption
 
-		public static List<string> getData()
+		public static List<string> GetData()
 		{
 			List<string> data = new List<string>();
 			Console.Clear();
@@ -389,26 +389,26 @@ namespace Client
 			string operatorString;
 			double operatorInt;
 
-			displayInstructions();
+			DisplayInstructions();
 
 			while (stop == true)
 			{
 				Console.Write("  ");
 
-				showData(data);
+				ShowData(data);
 
 				operatorString = Console.ReadLine();
 				if (operatorString == String.Empty && data.Count == 0)
 				{
 					Console.WriteLine("Campo vacio.");
 					Console.ReadKey();
-					displayInstructions();
+					DisplayInstructions();
 				}
 				else if (operatorString == String.Empty)
 				{
 					stop = false;
-					displayInstructions();
-					Console.WriteLine(String.Join(getSymbolAction(), data));
+					DisplayInstructions();
+					Console.WriteLine(String.Join(GetSymbolAction(), data));
 				}
 				else if ((operatorString.ToUpper()).Equals("SALIR"))
 				{
@@ -419,25 +419,25 @@ namespace Client
 				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
-					displayInstructions();
+					DisplayInstructions();
 				}
 				else if (double.TryParse(operatorString, out operatorInt))
 				{
 					data.Add(operatorString);
-					displayInstructions();
+					DisplayInstructions();
 				}
 				else
 				{
 					Console.WriteLine("Valor \"{0}\" es invalido.", operatorString);
 					Console.ReadKey();
-					displayInstructions();
+					DisplayInstructions();
 				}
 			}
 
 			return data;
-		}//getData
+		}//GetData
 
-		public static List<string> getDataReply(int reply) {
+		public static List<string> GetDataReply(int reply) {
 		//VARIABLES
 			List<string> data = new List<string>();
 			string operatorString;
@@ -448,12 +448,12 @@ namespace Client
 			for (int i = 0; i < reply; i++)
 			{
 				Console.Write("  ");
-				displayInstructions();
-				showData(data);
+				DisplayInstructions();
+				ShowData(data);
 
 				if (action.Equals("Sqrt"))
 				{
-					Console.Write(getSymbolAction());
+					Console.Write(GetSymbolAction());
 				}
 
 				operatorString = Console.ReadLine();
@@ -462,9 +462,9 @@ namespace Client
 				{
 					Console.WriteLine("Campo vacio.");
 					Console.ReadKey();
-					displayInstructions();
+					DisplayInstructions();
 					--i;
-					Console.WriteLine(String.Join(getSymbolAction(), data));
+					Console.WriteLine(String.Join(GetSymbolAction(), data));
 				}
 				else if ((operatorString.ToUpper()).Equals("SALIR"))
 				{
@@ -478,7 +478,7 @@ namespace Client
 				}
 				else if ((Double.TryParse(operatorString, out operatorDouble)))
 				{
-					displayInstructions();
+					DisplayInstructions();
 					data.Add(operatorString);
 				}
 				else
@@ -490,40 +490,40 @@ namespace Client
 			}//for
 			if (data != null)
 			{
-				showDataFinal(data);
+				ShowDataFinal(data);
 			}
 
 			return data;
-		}//getDataReply
+		}//GetDataReply
 
-		public static void showData( List<string> data) {
+		public static void ShowData( List<string> data) {
 			foreach (string ele in data)
 			{
 				if (action.Equals("Sqrt"))
 				{
-					Console.Write(getSymbolAction() + ele);
+					Console.Write(GetSymbolAction() + ele);
 				}
 				else
 				{
-					Console.Write(ele + getSymbolAction());
+					Console.Write(ele + GetSymbolAction());
 				}
 
 			}
-		}//showData
+		}//ShowData
 
-		public static void showDataFinal(List<string> data)
+		public static void ShowDataFinal(List<string> data)
 		{
 			if (action.Equals("Sqrt"))
 			{
-				Console.WriteLine(getSymbolAction() + data[0]);
+				Console.WriteLine(GetSymbolAction() + data[0]);
 			}
 			else
 			{
-				Console.WriteLine(String.Join(getSymbolAction(), data));
+				Console.WriteLine(String.Join(GetSymbolAction(), data));
 			}
-		}//showDataFinal
+		}//ShowDataFinal
 
-		public static string makeRequest(string objString) {
+		public static string MakeRequest(string objString) {
 		var resultJSON = "";
 			var httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action);
 			httpWebRequest.ContentType = "application/json";
@@ -552,7 +552,7 @@ namespace Client
 
 		}//MakeRequest
 
-		public static string getAction() {
+		public static string GetAction() {
 			string actionFinal; 
 		switch(action) {
 				case "Add":
@@ -576,9 +576,9 @@ namespace Client
 			}
 
 			return actionFinal;
-		}//getAction
+		}//GetAction
 
-		public static string getSymbolAction()
+		public static string GetSymbolAction()
 		{
 			string actionFinal;
 			switch (action)
@@ -604,15 +604,15 @@ namespace Client
 			}
 
 			return actionFinal;
-		}//getSymbolAction
+		}//GetSymbolAction
 
-		public static string generateId()
+		public static string GenerateId()
 		{
 			Random rnd = new Random();
 			string x = Convert.ToString(rnd.Next(0, 10000));
 			x = x.PadLeft(5, '0');
 			return x;
-		}//generateId
+		}//GenerateId
 
 	}//program
 }
