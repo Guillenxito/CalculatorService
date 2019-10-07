@@ -99,9 +99,9 @@ namespace Client
 					{
 						idHistorial = idHistorialUtility;
 					}
-					Journal journal = new Journal(idHistorial);
-					string resultfinal = MakeRequest(JsonConvert.SerializeObject(journal));
-					if (resultfinal == "")
+					Journal EJournal = new Journal(idHistorial);
+					string resultfinal = MakeRequest(JsonConvert.SerializeObject(EJournal));
+					if (resultfinal == "False")
 					{
 						Console.WriteLine("El ID no existe. No se guardara el historial.");
 						idHistorial = "";
@@ -125,13 +125,13 @@ namespace Client
 					}
 					if (!idHistorialQuery.Equals(""))
 					{
-						Journal eJournal = new Journal(idHistorial);
-						string eResultfinal = MakeRequest(JsonConvert.SerializeObject(eJournal));
-						if (eResultfinal != "")
+						Journal EJournal4 = new Journal(idHistorial);
+						string eResultfinal = MakeRequest(JsonConvert.SerializeObject(EJournal4));
+						if (eResultfinal == "True")
 						{
 							action = "Journal";
-							Journal journalTwo = new Journal(idHistorial);
-							string resultfinalTwo = MakeRequest(JsonConvert.SerializeObject(journalTwo));
+							Journal Journal = new Journal(idHistorial);
+							string resultfinalTwo = MakeRequest(JsonConvert.SerializeObject(Journal));
 							string[] resultFinalArr = resultfinalTwo.Split('_');
 							Console.Clear();
 							foreach (string element in resultFinalArr)

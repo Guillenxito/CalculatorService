@@ -296,32 +296,44 @@ namespace CalculatorS.Controllers
 		}//SQRT
 
 		[HttpPost] //CLOSED
-		public string ExistJournal(Journal IdForJournal)
+		public bool ExistJournal(Journal IdForJournal)
 		{
-			try
+			if (IdForJournal.Id == null || IdForJournal == null)
 			{
-				if (IdForJournal.Id == null || IdForJournal == null)
-				{
-					Error objectFinalError = new Error();
-					objectFinalError.Error400();
-					return JsonConvert.SerializeObject(objectFinalError);
-				}
-
-
-				if (IdForJournal.ExistJournal()) {
-					return IdForJournal.Id;				
-				 }
-
-				return null;
-
+				return false;
 			}
-			catch (Exception ex)
-			{
-				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
-				return JsonConvert.SerializeObject(objectFinalError);
-			}
+
+			return IdForJournal.ExistJournal();
+
 		}//ExistJournal
+
+		//public string ExistJournal(Journal IdForJournal)
+		//{
+		//	try
+		//	{
+		//		if (IdForJournal.Id == null || IdForJournal == null)
+		//		{
+		//			Error objectFinalError = new Error();
+		//			objectFinalError.Error400();
+		//			return JsonConvert.SerializeObject(objectFinalError);
+		//		}
+
+
+		//		if (IdForJournal.ExistJournal())
+		//		{
+		//			return IdForJournal.Id;
+		//		}
+
+		//		return null;
+
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Error objectFinalError = new Error();
+		//		objectFinalError.Error500(ex.ToString());
+		//		return JsonConvert.SerializeObject(objectFinalError);
+		//	}
+		//}//ExistJournal
 
 		[HttpPost] //CLOSED
 		public string Journal(Journal IdForJournal)
