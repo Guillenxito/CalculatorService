@@ -12,12 +12,12 @@ namespace CalculatorS.Models
 			Id = id;
 		}
 
-		public bool SaveJournal(string operation)
+		public void SaveJournal(string operation)
 		{
 			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
 
 			if(!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\"))) {
-				return false;
+				DirectoryInfo di = Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\"));
 			}
 
 			if (!File.Exists(mainPath))
@@ -35,7 +35,6 @@ namespace CalculatorS.Models
 
 				filew.Close();
 			}
-			return true;
 		}//SaveJournal
 
 		public bool ExistJournal() {
