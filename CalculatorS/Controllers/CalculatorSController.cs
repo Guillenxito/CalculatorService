@@ -294,42 +294,42 @@ namespace CalculatorS.Controllers
 			}
 		}//SQRT
 
-		[HttpPost] //CLOSED
-		public bool ExistJournal(Journal IdForJournal)
-		{
-			if (IdForJournal == null || IdForJournal.Id == null)
-			{
-				return false;
-			}
+		//[HttpPost] //CLOSED
+		//public bool ExistJournal(Journal IdForJournal)
+		//{
+		//	if (IdForJournal == null || IdForJournal.Id == null)
+		//	{
+		//		return false;
+		//	}
 
-			return IdForJournal.ExistJournal();
+		//	return IdForJournal.ExistJournal();
 
-		}//ExistJournal
+		//}//ExistJournal
 
-		[HttpPost] //CLOSED
-		public string Journal(Journal IdForJournal)
-		{
-			try
-			{
-				if (IdForJournal.Id == null || IdForJournal == null)
-				{
-					Error objectFinalError = new Error();
-					objectFinalError.Error400();
-					return JsonConvert.SerializeObject(objectFinalError);
-				}
+		//[HttpPost] //CLOSED
+		//public string Journal(Journal IdForJournal)
+		//{
+		//	try
+		//	{
+		//		if (IdForJournal.Id == null || IdForJournal == null)
+		//		{
+		//			Error objectFinalError = new Error();
+		//			objectFinalError.Error400();
+		//			return JsonConvert.SerializeObject(objectFinalError);
+		//		}
 
-				if (IdForJournal.ExistJournal() )
-				{
-					return IdForJournal.ReadJournal();
-				}
-				return null;
-			}
-			catch (Exception ex)
-			{
-				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
-				return JsonConvert.SerializeObject(objectFinalError);
-			}
-		}//Journal
+		//		if (IdForJournal.ExistJournal())
+		//		{
+		//			return IdForJournal.ReadJournal();
+		//		}
+		//		return null;
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Error objectFinalError = new Error();
+		//		objectFinalError.Error500(ex.ToString());
+		//		return JsonConvert.SerializeObject(objectFinalError);
+		//	}
+		//}//Journal
 	}
 }

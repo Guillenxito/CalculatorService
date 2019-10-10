@@ -95,13 +95,14 @@ namespace Client
 					Console.Clear();
 					Console.Write("Escriba  \'Actual\' para usar el Id actual o escriba el ID del historial que quieres utilizar : ");
 					action = "ExistJournal";
+					urlServer = "http://localhost:50727/Journal/";
 					string idHistorialUtility = Console.ReadLine();
 					if (!idHistorialUtility.ToUpper().Equals("ACTUAL"))
 					{
 						idHistorial = idHistorialUtility;
 					}
 					Journal EJournal = new Journal(idHistorial);
-					string resultfinal = MakeRequest(JsonConvert.SerializeObject(EJournal));
+					string resultfinal = MakeRequest("id=" + EJournal.Id, "GET");
 					if (resultfinal == "False")
 					{
 						Console.WriteLine("El ID no existe. No se guardara el historial.");
@@ -119,6 +120,7 @@ namespace Client
 					Console.Clear();
 					Console.Write("Escriba \'Actual\' para consultar el Historial actual o el ID del historial que quieres Consultar: ");
 					action = "ExistJournal";
+					urlServer = "http://localhost:50727/Journal/";
 					string idHistorialQuery = Console.ReadLine();
 					if (!idHistorialQuery.ToUpper().Equals("ACTUAL"))
 					{
@@ -127,12 +129,12 @@ namespace Client
 					if (!idHistorialQuery.Equals(""))
 					{
 						Journal EJournal4 = new Journal(idHistorial);
-						string eResultfinal = MakeRequest(JsonConvert.SerializeObject(EJournal4));
+						string eResultfinal = MakeRequest("id=" + EJournal4.Id , "GET");
 						if (eResultfinal == "True")
 						{
 							action = "Journal";
 							Journal Journal = new Journal(idHistorial);
-							string resultfinalTwo = MakeRequest(JsonConvert.SerializeObject(Journal));
+							string resultfinalTwo = MakeRequest("id=" + Journal.Id, "GET");
 							string[] resultFinalArr = resultfinalTwo.Split('_');
 							Console.Clear();
 							foreach (string element in resultFinalArr)
@@ -271,6 +273,7 @@ namespace Client
 
 		public static string Calculate(List<string> data) {
 			string responseFinal = null;
+			urlServer = "http://localhost:50727/CalculatorS/";
 			switch (action)
 			{
 				case "Add":
@@ -524,7 +527,7 @@ namespace Client
 			}
 		}//ShowDataFinal
 
-		public static string MakeRequest(string objString) {
+		public static string MakeRequest(string objString,string method = "POST") {
 		var resultJSON = "";
 			var httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action);
 			httpWebRequest.ContentType = "application/json";
@@ -532,12 +535,16 @@ namespace Client
 			httpWebRequest.Headers["X-Evi-Tracking-Id"] = idHistorial;
 			try
 			{
-				using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-				{
-					streamWriter.Write(objString);
-					streamWriter.Close();
+				if (method.Equals("POST")) {
+					using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+					{
+						streamWriter.Write(objString);
+						streamWriter.Close();
+					}
+				}else {
+					httpWebRequest.Method = "POST";
+					httpWebRequest = (HttpWebRequest)WebRequest.Create(urlServer + action +"?"+ objString);
 				}
-
 				var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 				using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
 				{
