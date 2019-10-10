@@ -13,7 +13,7 @@ namespace CalculatorS.Controllers
 		public string Add(AddAddends NumbersForAdd)
 		{
 			try {
-				if (NumbersForAdd.Addends == null || NumbersForAdd == null)
+				if (NumbersForAdd == null || NumbersForAdd.Addends == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -44,12 +44,7 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sum", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					if (!journal.SaveJournal(jsonOperation))
-					{
-						Error objectFinalError = new Error();
-						objectFinalError.Error500("No se ha encontrado el directorio.");
-						return JsonConvert.SerializeObject(objectFinalError);
-					}
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Sum = Convert.ToString(result);
@@ -115,12 +110,7 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sub", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					if (!journal.SaveJournal(jsonOperation))
-					{
-						Error objectFinalError = new Error();
-						objectFinalError.Error500("No se ha encontrado el directorio.");
-						return JsonConvert.SerializeObject(objectFinalError);
-					}
+					journal.SaveJournal(jsonOperation);
 				}
 				objectFinal.Diference = Convert.ToString(result);
 				return JsonConvert.SerializeObject(objectFinal);
@@ -140,7 +130,7 @@ namespace CalculatorS.Controllers
 				double result = 1;
 				MultProduct objectFinal = new MultProduct();
 
-				if (NumbersForMult.Factors == null || NumbersForMult == null)
+				if (NumbersForMult == null || NumbersForMult.Factors == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -177,12 +167,7 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Mult", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					if (!journal.SaveJournal(jsonOperation))
-					{
-						Error objectFinalError = new Error();
-						objectFinalError.Error500("No se ha encontrado el directorio.");
-						return JsonConvert.SerializeObject(objectFinalError);
-					}
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Product = Convert.ToString(result);
@@ -199,7 +184,7 @@ namespace CalculatorS.Controllers
 		public string Div(DivDividendDivisor NumbersForDiv)
 		{
 			try { 
-				if (NumbersForDiv.Dividend == null && NumbersForDiv.Divisor == null || NumbersForDiv == null)
+				if (NumbersForDiv == null || NumbersForDiv.Dividend == null && NumbersForDiv.Divisor == null )
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -244,11 +229,7 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Div", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					if (!journal.SaveJournal(jsonOperation)) {
-						Error objectFinalError = new Error();
-						objectFinalError.Error500("No se ha encontrado el directorio.");
-						return JsonConvert.SerializeObject(objectFinalError);
-					}
+					journal.SaveJournal(jsonOperation);
 				}
 				return JsonConvert.SerializeObject(objectFinal);
 			}
@@ -264,7 +245,7 @@ namespace CalculatorS.Controllers
 		{
 			try
 			{
-				if (NumberForSQRT.Number == null || NumberForSQRT == null)
+				if(NumberForSQRT == null || NumberForSQRT.Number == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -280,7 +261,6 @@ namespace CalculatorS.Controllers
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					//objectFinalError.ErrorMessage = "the SQRT of a negative number cannot be made";
 					objectFinalError.ErrorMessage = "No se puede hcaer una raiz cuadrada de un numero negativo";
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
@@ -300,12 +280,7 @@ namespace CalculatorS.Controllers
 					Query Operation = new Query("Sqrt", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
-					if (!journal.SaveJournal(jsonOperation))
-					{
-						Error objectFinalError = new Error();
-						objectFinalError.Error500("No se ha encontrado el directorio.");
-						return JsonConvert.SerializeObject(objectFinalError);
-					}
+					journal.SaveJournal(jsonOperation);
 				}
 
 				objectFinal.Square = Convert.ToString(result);
@@ -322,7 +297,7 @@ namespace CalculatorS.Controllers
 		[HttpPost] //CLOSED
 		public bool ExistJournal(Journal IdForJournal)
 		{
-			if (IdForJournal.Id == null || IdForJournal == null)
+			if (IdForJournal == null || IdForJournal.Id == null)
 			{
 				return false;
 			}
