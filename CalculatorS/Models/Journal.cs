@@ -29,11 +29,11 @@ namespace CalculatorS.Models
 					mylogs.Close();
 				}
 			}
-			using (StreamWriter filew = new StreamWriter(mainPath, true))
+			using (StreamWriter writer = new StreamWriter(mainPath, true))
 			{
-				filew.WriteLine("_"+operation+"_"); 
+				writer.WriteLine("_"+operation+"_"); 
 
-				filew.Close();
+				writer.Close();
 			}
 		}//SaveJournal
 
