@@ -19,7 +19,7 @@ namespace CalculatorS.Controllers
 					objectFinalError.Error400();
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
-				AddSum objectFinal = new AddSum();
+				AddSum responseSum = new AddSum();
 				double result = 0;
 				double numD;
 				foreach (string num in NumbersForAdd.Addends)
@@ -47,8 +47,8 @@ namespace CalculatorS.Controllers
 					journal.SaveJournal(jsonOperation);
 				}
 
-				objectFinal.Sum = Convert.ToString(result);
-				return JsonConvert.SerializeObject(objectFinal);
+				responseSum.Sum = Convert.ToString(result);
+				return JsonConvert.SerializeObject(responseSum);
 			}catch(Exception ex) {
 				Error objectFinalError = new Error();
 				objectFinalError.Error500(ex.ToString());
@@ -61,7 +61,7 @@ namespace CalculatorS.Controllers
 		{
 			try { 
 				double result = 0;
-				SubDiference objectFinal = new SubDiference();
+				SubDiference responseDiference = new SubDiference();
 
 				if (NumbersForSubtract.Operators == null || NumbersForSubtract == null)
 				{
@@ -112,8 +112,8 @@ namespace CalculatorS.Controllers
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
 				}
-				objectFinal.Diference = Convert.ToString(result);
-				return JsonConvert.SerializeObject(objectFinal);
+				responseDiference.Diference = Convert.ToString(result);
+				return JsonConvert.SerializeObject(responseDiference);
 			}
 			catch (Exception ex) 
 			{
@@ -128,7 +128,7 @@ namespace CalculatorS.Controllers
 		{ 
 			try {
 				double result = 1;
-				MultProduct objectFinal = new MultProduct();
+				MultProduct responseProduct = new MultProduct();
 
 				if (NumbersForMult == null || NumbersForMult.Factors == null)
 				{
@@ -170,8 +170,8 @@ namespace CalculatorS.Controllers
 					journal.SaveJournal(jsonOperation);
 				}
 
-				objectFinal.Product = Convert.ToString(result);
-				return JsonConvert.SerializeObject(objectFinal);
+				responseProduct.Product = Convert.ToString(result);
+				return JsonConvert.SerializeObject(responseProduct);
 			}
 			catch (Exception ex) {
 				Error objectFinalError = new Error();
@@ -222,16 +222,16 @@ namespace CalculatorS.Controllers
 
 				double Quotient = Convert.ToDouble(NumbersForDiv.Dividend) / Convert.ToDouble(NumbersForDiv.Divisor);
 				double Remainder = Convert.ToDouble(NumbersForDiv.Dividend) % Convert.ToDouble(NumbersForDiv.Divisor);
-				DivQuotientRemainder objectFinal = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
+				DivQuotientRemainder responseDiv = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
-					string calculation = NumbersForDiv.Dividend + " / " + NumbersForDiv.Divisor + " = Quotient(" + objectFinal.Quotient+ ") & Remainder("+ objectFinal.Remainder + ")";
+					string calculation = NumbersForDiv.Dividend + " / " + NumbersForDiv.Divisor + " = Quotient(" + responseDiv.Quotient+ ") & Remainder("+ responseDiv.Remainder + ")";
 					Query Operation = new Query("Div", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
 				}
-				return JsonConvert.SerializeObject(objectFinal);
+				return JsonConvert.SerializeObject(responseDiv);
 			}
 			catch (Exception ex) {
 				Error objectFinalError = new Error();
@@ -271,7 +271,7 @@ namespace CalculatorS.Controllers
 					string numAux = string.Join(".", arr);
 					NumberForSQRT.Number = numAux;
 				}
-				SQRTsquare objectFinal = new SQRTsquare();
+				SQRTsquare responseSquare = new SQRTsquare();
 				double result = Math.Sqrt(Convert.ToDouble(NumberForSQRT.Number));
 
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
@@ -283,8 +283,8 @@ namespace CalculatorS.Controllers
 					journal.SaveJournal(jsonOperation);
 				}
 
-				objectFinal.Square = Convert.ToString(result);
-				return JsonConvert.SerializeObject(objectFinal);
+				responseSquare.Square = Convert.ToString(result);
+				return JsonConvert.SerializeObject(responseSquare);
 			}
 			catch (Exception ex)
 			{
