@@ -5,6 +5,7 @@ namespace CalculatorS.Models
 {
 	public class Journal
 	{
+		private static object locker = new object();
 		private const string directoryPath= "Tracking\\";
 		public string Id { get; set; }
 
@@ -15,26 +16,30 @@ namespace CalculatorS.Models
 
 		public void SaveJournal(string operation)
 		{
-			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
-
-			if(!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath))) {
-				DirectoryInfo di = Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath));
-			}
-
-			if (!File.Exists(mainPath))
+			lock (locker)
 			{
-				using (StreamWriter mylogs = File.AppendText(mainPath)) 
+				string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
+
+				if (!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath)))
 				{
-					mylogs.WriteLine("_** Operations History **_");
-
-					mylogs.Close();
+					DirectoryInfo di = Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath));
 				}
-			}
-			using (StreamWriter writer = new StreamWriter(mainPath, true))
-			{
-				writer.WriteLine("_"+operation+"_"); 
 
-				writer.Close();
+				if (!File.Exists(mainPath))
+				{
+					using (StreamWriter mylogs = File.AppendText(mainPath))
+					{
+						mylogs.WriteLine("_** Operations History **_");
+
+						mylogs.Close();
+					}
+				}
+				using (StreamWriter writer = new StreamWriter(mainPath, true))
+				{
+					writer.WriteLine("_" + operation + "_");
+
+					writer.Close();
+				}
 			}
 		}//SaveJournal
 
@@ -48,26 +53,30 @@ namespace CalculatorS.Models
 		}//ExistJournal
 
 		public string ReadJournal() {
+			lock (locker)
+			{
+				string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
 
-			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
+				string line = "";
+				string text = "";
 
-			string line = "";
-			string text = "";
-
-			try {
-				using (StreamReader file = new StreamReader(mainPath))
+				try
 				{
-					while ((line = file.ReadLine()) != null)
+					using (StreamReader file = new StreamReader(mainPath))
 					{
-						text = text + line + "\b";
-					}
+						while ((line = file.ReadLine()) != null)
+						{
+							text = text + line + "\b";
+						}
 
+					}
+					return text;
 				}
-				return text;
-			} catch {
-				return "Error al cargar el archivo.";	
-			}
-			
+				catch
+				{
+					return "Error al cargar el archivo.";
+				}
+			}			
 		}//ReadJournal
 
 	}
