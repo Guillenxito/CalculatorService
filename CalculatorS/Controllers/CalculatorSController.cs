@@ -51,7 +51,7 @@ namespace CalculatorS.Controllers
 				return JsonConvert.SerializeObject(responseSum);
 			}catch(Exception ex) {
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//Add
@@ -118,7 +118,7 @@ namespace CalculatorS.Controllers
 			catch (Exception ex) 
 			{
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//Sub
@@ -175,7 +175,7 @@ namespace CalculatorS.Controllers
 			}
 			catch (Exception ex) {
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//Mult
@@ -235,7 +235,7 @@ namespace CalculatorS.Controllers
 			}
 			catch (Exception ex) {
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//Div
@@ -289,47 +289,9 @@ namespace CalculatorS.Controllers
 			catch (Exception ex)
 			{
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//SQRT
-
-		//[HttpPost] //CLOSED
-		//public bool ExistJournal(Journal IdForJournal)
-		//{
-		//	if (IdForJournal == null || IdForJournal.Id == null)
-		//	{
-		//		return false;
-		//	}
-
-		//	return IdForJournal.ExistJournal();
-
-		//}//ExistJournal
-
-		//[HttpPost] //CLOSED
-		//public string Journal(Journal IdForJournal)
-		//{
-		//	try
-		//	{
-		//		if (IdForJournal.Id == null || IdForJournal == null)
-		//		{
-		//			Error objectFinalError = new Error();
-		//			objectFinalError.Error400();
-		//			return JsonConvert.SerializeObject(objectFinalError);
-		//		}
-
-		//		if (IdForJournal.ExistJournal())
-		//		{
-		//			return IdForJournal.ReadJournal();
-		//		}
-		//		return null;
-		//	}
-		//	catch (Exception ex)
-		//	{
-		//		Error objectFinalError = new Error();
-		//		objectFinalError.Error500(ex.ToString());
-		//		return JsonConvert.SerializeObject(objectFinalError);
-		//	}
-		//}//Journal
 	}
 }
