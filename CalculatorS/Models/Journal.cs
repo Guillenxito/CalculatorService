@@ -5,6 +5,7 @@ namespace CalculatorS.Models
 {
 	public class Journal
 	{
+		private const string directoryPath= "Tracking\\";
 		public string Id { get; set; }
 
 		public Journal() { }
@@ -14,10 +15,10 @@ namespace CalculatorS.Models
 
 		public void SaveJournal(string operation)
 		{
-			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
 
-			if(!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\"))) {
-				DirectoryInfo di = Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\"));
+			if(!Directory.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath))) {
+				DirectoryInfo di = Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath));
 			}
 
 			if (!File.Exists(mainPath))
@@ -38,7 +39,8 @@ namespace CalculatorS.Models
 		}//SaveJournal
 
 		public bool ExistJournal() {
-			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
+
 			if ( File.Exists(mainPath)) {
 				return true;
 			}
@@ -47,19 +49,25 @@ namespace CalculatorS.Models
 
 		public string ReadJournal() {
 
-			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Tracking\" + Id);
+			string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
 
 			string line = "";
 			string text = "";
-			using (StreamReader file = new StreamReader(mainPath))
-			{
-				while ((line = file.ReadLine()) != null)
-				{
-					text = text + line + "\b";
-				}
 
+			try {
+				using (StreamReader file = new StreamReader(mainPath))
+				{
+					while ((line = file.ReadLine()) != null)
+					{
+						text = text + line + "\b";
+					}
+
+				}
+				return text;
+			} catch {
+				return "Error al cargar el archivo.";	
 			}
-			return text;
+			
 		}//ReadJournal
 
 	}
