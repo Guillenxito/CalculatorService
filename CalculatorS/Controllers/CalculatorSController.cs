@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 
 using NLog;
-
 using CalculatorS.Models;
 
 namespace CalculatorS.Controllers
@@ -20,12 +19,13 @@ namespace CalculatorS.Controllers
 		{
 			string stringOperationLog = "";
 			try {
+				 string idApp = GetIdTracking(Request.Headers["X-Evi-Tracking-Id"]);
 
 				if (NumbersForAdd == null || NumbersForAdd.Addends == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR ADD -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES NULOS.");
+					logger.Trace("ERROR ADD -> ID : " + idApp + " MENSAJE : OPERADORES NULOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 				AddSum responseSum = new AddSum();
@@ -37,7 +37,7 @@ namespace CalculatorS.Controllers
 					if (!double.TryParse(num, out numD)){
 						Error objectFinalError = new Error();
 						objectFinalError.Error400();
-						logger.Trace("ERROR ADD -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES INVALIDOS.");
+						logger.Trace("ERROR ADD -> ID : " + idApp + " MENSAJE : OPERADORES INVALIDOS.");
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
 					if(num.Contains(",")) {
@@ -50,17 +50,17 @@ namespace CalculatorS.Controllers
 				}
 				stringOperationLog = string.Join(" + ",NumbersForAdd.Addends) + " = " + result ;
 
-				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				if (idApp != "NULL")
 				{
 					string calculation = string.Join(" + ", NumbersForAdd.Addends);
 					Query Operation = new Query("Sum ", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
-					stringOperationLog = "ADD  -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + "  OPERATION :" + stringOperationLog;	
+					stringOperationLog = "ADD  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;	
 				}
 				else {
-					stringOperationLog = "ADD  -> ID : NULL " + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "ADD  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 
 				logger.Trace(stringOperationLog);
@@ -80,13 +80,16 @@ namespace CalculatorS.Controllers
 			try { 
 				double result = 0;
 				string stringOperationLog = "";
-				SubDiference responseDiference = new SubDiference();
+	
+				
+
+				string idApp = GetIdTracking(Request.Headers["X-Evi-Tracking-Id"]);
 
 				if (NumbersForSubtract.Operators == null || NumbersForSubtract == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR SUB -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES NULOS.");
+					logger.Trace("ERROR SUB -> ID : " + idApp + " MENSAJE : OPERADORES NULOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
@@ -100,7 +103,7 @@ namespace CalculatorS.Controllers
 					{
 						Error objectFinalError = new Error();
 						objectFinalError.Error400();
-						logger.Trace("ERROR SUB -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES INVALIDOS.");
+						logger.Trace("ERROR SUB -> ID : " + idApp + " MENSAJE : OPERADORES INVALIDOS.");
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
 
@@ -121,25 +124,28 @@ namespace CalculatorS.Controllers
 				foreach (double num in list)
 				{
 					result = result - num;
-				
 				}
 				stringOperationLog = string.Join(" - ", NumbersForSubtract.Operators) + " = " + result;
 				result = Math.Round(result,2);
-				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				if (idApp != "NULL")
 				{
 					string calculation = string.Join(" - ", NumbersForSubtract.Operators);
 					Query Operation = new Query("Sub ", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
-					stringOperationLog = "SUB  -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "SUB  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				else
 				{
-					stringOperationLog = "SUB  -> ID : NULL " + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "SUB  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
+
 				logger.Trace(stringOperationLog);
+
+				SubDiference responseDiference = new SubDiference();
 				responseDiference.Diference = Convert.ToString(result);
+
 				return JsonConvert.SerializeObject(responseDiference);
 			}
 			catch (Exception ex) 
@@ -156,13 +162,13 @@ namespace CalculatorS.Controllers
 			try {
 				double result = 1;
 				string stringOperationLog = "";
-				MultProduct responseProduct = new MultProduct();
+				string idApp = GetIdTracking(Request.Headers["X-Evi-Tracking-Id"]);
 
 				if (NumbersForMult == null || NumbersForMult.Factors == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR MULT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES NULOS.");
+					logger.Trace("ERROR MULT -> ID : " + idApp + " MENSAJE : OPERADORES NULOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
@@ -173,7 +179,7 @@ namespace CalculatorS.Controllers
 					{
 						Error objectFinalError = new Error();
 						objectFinalError.Error400();
-						logger.Trace("ERROR MULT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES INVALIDOS.");
+						logger.Trace("ERROR MULT -> ID : " + idApp + " MENSAJE : OPERADORES INVALIDOS.");
 						return JsonConvert.SerializeObject(objectFinalError);
 					}
 					if (num.Contains(","))
@@ -189,22 +195,24 @@ namespace CalculatorS.Controllers
 					
 				}
 				stringOperationLog = string.Join(" * ", NumbersForMult.Factors) + " = " + result;
-				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				if (idApp != "NULL")
 				{
 					string calculation = string.Join(" * ", NumbersForMult.Factors);
 					Query Operation = new Query("Mult", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
-					stringOperationLog = "MULT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "MULT -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				else
 				{
-					stringOperationLog = "MULT -> ID : NULL " + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "MULT -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				logger.Trace(stringOperationLog);
 
+				MultProduct responseProduct = new MultProduct();
 				responseProduct.Product = Convert.ToString(result);
+
 				return JsonConvert.SerializeObject(responseProduct);
 			}
 			catch (Exception ex) {
@@ -219,11 +227,12 @@ namespace CalculatorS.Controllers
 		{
 			try {
 				string stringOperationLog = "";
+				string idApp = GetIdTracking(Request.Headers["X-Evi-Tracking-Id"]);
 				if (NumbersForDiv == null || NumbersForDiv.Dividend == null && NumbersForDiv.Divisor == null )
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR DIV -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES NULOS.");
+					logger.Trace("ERROR DIV -> ID : " + idApp + " MENSAJE : OPERADORES NULOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
@@ -232,14 +241,23 @@ namespace CalculatorS.Controllers
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR DIV -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES INVALIDOS.");
+					logger.Trace("ERROR DIV -> ID : " + idApp  + " MENSAJE : OPERADORES INVALIDOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 
 				if (Convert.ToDouble(NumbersForDiv.Dividend) == 0){
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR DIV -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : NO SE PUEDE DIVIDIR ENTRE 0.");
+					logger.Trace("ERROR DIV -> ID : " + idApp + " MENSAJE : NO SE PUEDE DIVIDIR ENTRE 0.");
+					objectFinalError.ErrorMessage = "Cannot be divided by 0";
+					return JsonConvert.SerializeObject(objectFinalError);
+				}
+
+				if (Convert.ToDouble(NumbersForDiv.Divisor) == 0)
+				{
+					Error objectFinalError = new Error();
+					objectFinalError.Error400();
+					logger.Trace("ERROR DIV -> ID : " + idApp + " MENSAJE : NO SE PUEDE DIVIDIR ENTRE 0.");
 					objectFinalError.ErrorMessage = "Cannot be divided by 0";
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
@@ -260,20 +278,22 @@ namespace CalculatorS.Controllers
 
 				double Quotient = Convert.ToDouble(NumbersForDiv.Dividend) / Convert.ToDouble(NumbersForDiv.Divisor);
 				double Remainder = Convert.ToDouble(NumbersForDiv.Dividend) % Convert.ToDouble(NumbersForDiv.Divisor);
+
 				DivQuotientRemainder responseDiv = new DivQuotientRemainder(Convert.ToString(Quotient), Convert.ToString(Remainder));
 				stringOperationLog = NumbersForDiv.Dividend + " / "+ NumbersForDiv.Divisor + " = Quotient("+Convert.ToString(Quotient) + ") & Remainder(" + Convert.ToString(Remainder) + ")" ;
-				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				
+				if (idApp != "NULL")
 				{
 					string calculation = NumbersForDiv.Dividend + " / " + NumbersForDiv.Divisor + " = Quotient(" + responseDiv.Quotient+ ") & Remainder(" + responseDiv.Remainder + ")";
 					Query Operation = new Query("Div ", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
-					stringOperationLog = "DIV  -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "DIV  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				else
 				{
-					stringOperationLog = "DIV  -> ID : NULL " + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "DIV  -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				logger.Trace(stringOperationLog);
 				return JsonConvert.SerializeObject(responseDiv);
@@ -289,13 +309,16 @@ namespace CalculatorS.Controllers
 		public string SQRT(SQRTnumber NumberForSQRT)
 		{
 			string stringOperationLog = "";
+
 			try
 			{
-				if(NumberForSQRT == null || NumberForSQRT.Number == null)
+
+				string idApp = GetIdTracking(Request.Headers["X-Evi-Tracking-Id"]);
+				if (NumberForSQRT == null || NumberForSQRT.Number == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR SQRT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES NULOS.");
+					logger.Trace("ERROR SQRT -> ID : " + idApp + " MENSAJE : OPERADORES NULOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
 				double numD;
@@ -303,13 +326,13 @@ namespace CalculatorS.Controllers
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR SQRT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : OPERADORES INVALIDOS.");
+					logger.Trace("ERROR SQRT -> ID : " + idApp + " MENSAJE : OPERADORES INVALIDOS.");
 					return JsonConvert.SerializeObject(objectFinalError);
 				}else if (0 > Convert.ToDouble(NumberForSQRT.Number))
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
-					logger.Trace("ERROR SQRT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + " MENSAJE : NO SE PUEDE HACER SQRT DE 0.");
+					logger.Trace("ERROR SQRT -> ID : " + idApp + " MENSAJE : NO SE PUEDE HACER SQRT DE 0.");
 					objectFinalError.ErrorMessage = "No se puede hcaer una raiz cuadrada de un numero negativo";
 					return JsonConvert.SerializeObject(objectFinalError);
 				}
@@ -323,18 +346,18 @@ namespace CalculatorS.Controllers
 				SQRTsquare responseSquare = new SQRTsquare();
 				double result = Math.Sqrt(Convert.ToDouble(NumberForSQRT.Number));
 				stringOperationLog = " √" + NumberForSQRT.Number + " = " + result;
-				if (Request.Headers["X-Evi-Tracking-Id"].Any())
+				if (idApp != "NULL")
 				{
 					string calculation = " √"+ NumberForSQRT.Number;
 					Query Operation = new Query("Sqrt", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
-					stringOperationLog = "SQRT -> ID : " + Request.Headers["X-Evi-Tracking-Id"] + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "SQRT -> ID : " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 				else
 				{
-					stringOperationLog = "SQRT -> ID : NULL " + "  OPERATION :" + stringOperationLog;
+					stringOperationLog = "SQRT -> ID :  " + idApp + "  OPERATION :" + stringOperationLog;
 				}
 
 				logger.Trace(stringOperationLog);
@@ -348,5 +371,17 @@ namespace CalculatorS.Controllers
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//SQRT
+
+		public static string GetIdTracking(string id)
+		{
+			if (id.Any())
+			{
+				return id;
+			}
+			else
+			{
+				return "NULL";
+			}
+		}
 	}
 }
