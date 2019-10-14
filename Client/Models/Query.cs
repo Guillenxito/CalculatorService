@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CalculatorS.Models
+namespace Client.Models
 {
 	public class Query
 	{

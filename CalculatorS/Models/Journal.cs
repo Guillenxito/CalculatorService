@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace CalculatorS.Models
 {
@@ -30,14 +33,12 @@ namespace CalculatorS.Models
 					using (StreamWriter mylogs = File.AppendText(mainPath))
 					{
 						mylogs.WriteLine("_** Operations History **_");
-
 						mylogs.Close();
 					}
 				}
 				using (StreamWriter writer = new StreamWriter(mainPath, true))
 				{
-					writer.WriteLine("_" + operation + "_");
-
+					writer.WriteLine(operation);
 					writer.Close();
 				}
 			}
@@ -53,30 +54,34 @@ namespace CalculatorS.Models
 		}//ExistJournal
 
 		public string ReadJournal() {
-			lock (locker)
-			{
 				string mainPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @directoryPath + Id);
 
 				string line = "";
-				string text = "";
-
 				try
 				{
+				var operationsList = new List<Query>();
+				var counter = 0;
 					using (StreamReader file = new StreamReader(mainPath))
 					{
 						while ((line = file.ReadLine()) != null)
 						{
-							text = text + line + "\b";
+						if(counter != 0) {
+							var operationDeserialize = JsonConvert.DeserializeObject<Query>(line);
+							operationsList.Add(operationDeserialize);
 						}
-
+						counter++;
+						}
 					}
-					return text;
+
+					var operationsResponse = new Operations(operationsList);
+					var x = JsonConvert.SerializeObject(operationsResponse);
+
+					return x;
 				}
-				catch
+				catch (Exception ex)
 				{
 					return "Error al cargar el archivo.";
-				}
-			}			
+				}			
 		}//ReadJournal
 
 	}
