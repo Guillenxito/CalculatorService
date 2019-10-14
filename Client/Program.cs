@@ -80,6 +80,7 @@ namespace Client
 				case "0":
 				case "SALIR":
 					mainOption = "0";
+					Environment.Exit(0);
 					break;
 				case "1":
 					idHistorial = GenerateId();
@@ -135,11 +136,13 @@ namespace Client
 							action = "Journal";
 							Journal Journal = new Journal(idHistorial);
 							string resultfinalTwo = MakeRequest("id=" + Journal.Id, "GET");
-							string[] resultFinalArr = resultfinalTwo.Split('_');
+
+							var responseOperations = JsonConvert.DeserializeObject<Operations>(resultfinalTwo);
+							//string[] resultFinalArr = resultfinalTwo.Split('_');
 							Console.Clear();
-							foreach (string element in resultFinalArr)
+							foreach (Query element in responseOperations.ListOperations)
 							{
-								Console.WriteLine(element);
+								Console.WriteLine(" * Operation: {0} | Calculation: {1} | Date: {2}" ,element.Operation, element.Calculation, element.Date);
 							}
 						}
 						else

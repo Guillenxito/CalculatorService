@@ -1,10 +1,13 @@
-﻿using CalculatorS.Models;
-using Newtonsoft.Json;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+
+using Newtonsoft.Json;
+
+using NLog;
+
+using CalculatorS.Models;
 
 namespace CalculatorS.Controllers
 {
@@ -50,7 +53,7 @@ namespace CalculatorS.Controllers
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
 					string calculation = string.Join(" + ", NumbersForAdd.Addends);
-					Query Operation = new Query("Sum", calculation + " = " + result);
+					Query Operation = new Query("Sum ", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
@@ -125,7 +128,7 @@ namespace CalculatorS.Controllers
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
 					string calculation = string.Join(" - ", NumbersForSubtract.Operators);
-					Query Operation = new Query("Sub", calculation + " = " + result);
+					Query Operation = new Query("Sub ", calculation + " = " + result);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);
@@ -262,7 +265,7 @@ namespace CalculatorS.Controllers
 				if (Request.Headers["X-Evi-Tracking-Id"].Any())
 				{
 					string calculation = NumbersForDiv.Dividend + " / " + NumbersForDiv.Divisor + " = Quotient(" + responseDiv.Quotient+ ") & Remainder(" + responseDiv.Remainder + ")";
-					Query Operation = new Query("Div", calculation);
+					Query Operation = new Query("Div ", calculation);
 					string jsonOperation = JsonConvert.SerializeObject(Operation);
 					Journal journal = new Journal(Request.Headers["X-Evi-Tracking-Id"]);
 					journal.SaveJournal(jsonOperation);

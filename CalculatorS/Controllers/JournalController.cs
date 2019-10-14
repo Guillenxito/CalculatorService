@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+
 using Newtonsoft.Json;
 
 using CalculatorS.Models;
@@ -27,7 +28,7 @@ namespace CalculatorS.Controllers
 		{
 			try
 			{
-				if (IdForJournal.Id == null || IdForJournal == null)
+				if ( IdForJournal == null || IdForJournal.Id == null)
 				{
 					Error objectFinalError = new Error();
 					objectFinalError.Error400();
@@ -36,6 +37,7 @@ namespace CalculatorS.Controllers
 
 				if (IdForJournal.ExistJournal())
 				{
+					var x = IdForJournal.ReadJournal();
 					return IdForJournal.ReadJournal();
 				}
 				return null;
@@ -43,7 +45,7 @@ namespace CalculatorS.Controllers
 			catch (Exception ex)
 			{
 				Error objectFinalError = new Error();
-				objectFinalError.Error500(ex.ToString());
+				objectFinalError.Error500(ex.StackTrace);
 				return JsonConvert.SerializeObject(objectFinalError);
 			}
 		}//Journal
