@@ -230,6 +230,7 @@
     <Compile Include="Models\SQRTsquare.cs" />
     <Compile Include="Models\SubDiference.cs" />
     <Compile Include="Models\SubOperators.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
